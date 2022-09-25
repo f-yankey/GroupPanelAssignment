@@ -1,5 +1,9 @@
 using GroupPanelAssignment.Data;
 using GroupPanelAssignment.Data.Models;
+using GroupPanelAssignment.Data.Repositories;
+using GroupPanelAssignment.Data.Repositories.Interfaces;
+using GroupPanelAssignment.Data.Services;
+using GroupPanelAssignment.Data.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,9 +36,32 @@ namespace GroupPanelAssignment
                 options => options.UseSqlServer(Configuration.GetConnectionString("default"))
             );
 
+            #region Service
+            services.AddScoped<IUserManagementService, UserManagementService>();
+            services.AddScoped<ITeamManagementService, TeamManagementService>();
+            #endregion
 
+            #region Repositories
+            services.AddScoped<BaseRepository>();
+            services.AddScoped<IAppUserRepository, AppUserRepository>();
+            services.AddScoped<IAssignmentSessionRepository, AssignmentSessionRepository>();
+            services.AddScoped<IPanelMemberRepository, PanelMemberRepository>();
+            services.AddScoped<IPanelMemberTeamMemberScoreRepository, PanelMemberTeamMemberScoreRepository>();
+            services.AddScoped<IPanelMemberTeamScoreRepository, PanelMemberTeamScoreRepository>();
+            services.AddScoped<IPanelRepository, PanelRepository>();
+            services.AddScoped<IPanelTeamRepository, PanelTeamRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IScoreItemRepository, ScoreItemRepository>();
+            services.AddScoped<IScoreItemTypeRepository, ScoreItemTypeRepository>();
+            services.AddScoped<IScoringSessionRepository, ScoringSessionRepository>();
+            services.AddScoped<ISessionScoreItemRepository, SessionScoreItemRepository>();
+            services.AddScoped<ITeamMemberRepository, TeamMemberRepository>();
+            services.AddScoped<ITeamRepository, TeamRepository>();
+            services.AddScoped<ITeamSplitHistoryRepository, TeamSplitHistoryRepository>();
+            services.AddScoped<ITeamSupervisorRepository, TeamSupervisorRepository>();
+            services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+            #endregion
 
-           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -15,10 +15,11 @@ namespace GroupPanelAssignment.Data
             using (var context = new PanelTeamAssignDbContext(
                 serviceProvider.GetRequiredService<DbContextOptions<PanelTeamAssignDbContext>>()))
             {
-                // Look for any role.
+
                 bool containsRole = context.Roles.Any();
                 bool containsScoreItemTypes = context.ScoreItemTypes.Any();
-                bool doesNotContainEither = !containsRole || !containsScoreItemTypes;
+                bool containsLocations = context.Locations.Any();
+                bool doesNotContainEither = !containsRole || !containsScoreItemTypes || !containsLocations;
 
                 if (!containsRole)
                 {
@@ -28,6 +29,11 @@ namespace GroupPanelAssignment.Data
                 if (!containsScoreItemTypes)
                 {
                     PopulateScoreItemTypes(context);
+                }
+
+                if (!containsLocations)
+                {
+                    PopulateLocations(context);
                 }
 
                 if (doesNotContainEither)
@@ -81,6 +87,25 @@ namespace GroupPanelAssignment.Data
                                     new Role
                                     {
                                         RoleName = "Panel Member",
+                                        Created = DateTime.Now,
+                                        CreatedBy = "admin"
+                                    }
+                                );
+        }
+
+        private static void PopulateLocations(PanelTeamAssignDbContext context)
+        {
+            context.Locations.AddRange(
+                                    new Location
+                                    {
+                                        LocationName = "Engineering Auditorium",
+                                        Created = DateTime.Now,
+                                        CreatedBy = "admin"
+                                    },
+
+                                    new Location
+                                    {
+                                        LocationName = "Petroleum LT 1",
                                         Created = DateTime.Now,
                                         CreatedBy = "admin"
                                     }

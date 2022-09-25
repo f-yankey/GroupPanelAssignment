@@ -19,6 +19,7 @@ namespace GroupPanelAssignment.Data.Models
 
         public virtual DbSet<AppUser> AppUsers { get; set; }
         public virtual DbSet<AssignmentSession> AssignmentSessions { get; set; }
+        public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<Panel> Panels { get; set; }
         public virtual DbSet<PanelMember> PanelMembers { get; set; }
         public virtual DbSet<PanelMemberTeamMemberScore> PanelMemberTeamMemberScores { get; set; }
@@ -96,6 +97,25 @@ namespace GroupPanelAssignment.Data.Models
                 entity.Property(e => e.UpdatedBy).HasMaxLength(100);
             });
 
+            modelBuilder.Entity<Location>(entity =>
+            {
+                entity.ToTable("Location");
+
+                entity.Property(e => e.Created).HasColumnType("datetime");
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.LocationName)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.Updated).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedBy).HasMaxLength(100);
+            });
+
             modelBuilder.Entity<Panel>(entity =>
             {
                 entity.HasKey(e => e.PanelId)
@@ -122,6 +142,11 @@ namespace GroupPanelAssignment.Data.Models
                     .HasForeignKey(d => d.AssignmentSessionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Panel_AssignmentSession");
+
+                entity.HasOne(d => d.Location)
+                    .WithMany(p => p.Panels)
+                    .HasForeignKey(d => d.LocationId)
+                    .HasConstraintName("FK_Panel_Location");
             });
 
             modelBuilder.Entity<PanelMember>(entity =>
