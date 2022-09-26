@@ -51,65 +51,76 @@ namespace GroupPanelAssignment.Data
         private static void PopulateScoreItemTypes(PanelTeamAssignDbContext context)
         {
             context.ScoreItemTypes.AddRange(
-                                    new ScoreItemType
-                                    {
-                                        ScoreItemTypeName = "Group Score Item",
-                                        Created = DateTime.Now,
-                                        CreatedBy = "admin"
-                                    },
+                new ScoreItemType
+                {
+                    ScoreItemTypeName = "Group Score Item",
+                    Created = DateTime.Now,
+                    CreatedBy = "admin"
+                },
+                new ScoreItemType
+                {
+                    ScoreItemTypeName = "Individual Score Item",
+                    Created = DateTime.Now,
+                    CreatedBy = "admin"
+                }
+            );
 
-                                    new ScoreItemType
-                                    {
-                                        ScoreItemTypeName = "Individual Score Item",
-                                        Created = DateTime.Now,
-                                        CreatedBy = "admin"
-                                    }
-                                );
         }
 
         private static void PopulateRoles(PanelTeamAssignDbContext context)
         {
             context.Roles.AddRange(
-                                    new Role
-                                    {
-                                        RoleName = "Student",
-                                        Created = DateTime.Now,
-                                        CreatedBy = "admin"
-                                    },
+                new Role
+                {
+                    RoleName = "Super Admin",
+                    Created = DateTime.Now,
+                    CreatedBy = "admin"
+                },
+                new Role
+                {
+                    RoleName = "Admin",
+                    Created = DateTime.Now,
+                    CreatedBy = "admin"
+                },
+                new Role
+                {
+                    RoleName = "Student",
+                    Created = DateTime.Now,
+                    CreatedBy = "admin"
+                },
+                new Role
+                {
+                    RoleName = "Supervisor",
+                    Created = DateTime.Now,
+                    CreatedBy = "admin"
+                },
+                new Role
+                {
+                    RoleName = "Panel Member",
+                    Created = DateTime.Now,
+                    CreatedBy = "admin"
+                }
+            );
 
-                                    new Role
-                                    {
-                                        RoleName = "Supervisor",
-                                        Created = DateTime.Now,
-                                        CreatedBy = "admin"
-                                    },
-
-                                    new Role
-                                    {
-                                        RoleName = "Panel Member",
-                                        Created = DateTime.Now,
-                                        CreatedBy = "admin"
-                                    }
-                                );
         }
 
         private static void PopulateLocations(PanelTeamAssignDbContext context)
         {
             context.Locations.AddRange(
-                                    new Location
-                                    {
-                                        LocationName = "Engineering Auditorium",
-                                        Created = DateTime.Now,
-                                        CreatedBy = "admin"
-                                    },
+                 new Location
+                 {
+                     LocationName = "Engineering Auditorium",
+                     Created = DateTime.Now,
+                     CreatedBy = "admin"
+                 },
+                new Location
+                {
+                    LocationName = "Petroleum LT 1",
+                    Created = DateTime.Now,
+                    CreatedBy = "admin"
+                }
+            );
 
-                                    new Location
-                                    {
-                                        LocationName = "Petroleum LT 1",
-                                        Created = DateTime.Now,
-                                        CreatedBy = "admin"
-                                    }
-                                );
         }
     }
 }
