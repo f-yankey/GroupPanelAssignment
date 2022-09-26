@@ -1,6 +1,8 @@
-CREATE DATABASE PanelTeamAssignDb
+USE master
 go
-USE PanelTeamAssignDb
+CREATE DATABASE GroPanDb
+go
+USE GroPanDb
 go
 /* 
  * TABLE: AppUser 
@@ -29,12 +31,37 @@ ELSE
 go
 
 /* 
+ * TABLE: AppUserAssignmentSession 
+ */
+
+CREATE TABLE AppUserAssignmentSession(
+    AppUserAssignmentSessionId    int              IDENTITY(1,1),
+    UserId                        int              NOT NULL,
+    AssignmentSessionId           int              NOT NULL,
+    Created                       datetime         NULL,
+    CreatedBy                     nvarchar(100)    NOT NULL,
+    Updated                       datetime         NULL,
+    UpdatedBy                     nvarchar(100)    NULL,
+    CONSTRAINT PK_AppUserAssignmentSession PRIMARY KEY NONCLUSTERED (AppUserAssignmentSessionId)
+)
+go
+
+
+
+IF OBJECT_ID('AppUserAssignmentSession') IS NOT NULL
+    PRINT '<<< CREATED TABLE AppUserAssignmentSession >>>'
+ELSE
+    PRINT '<<< FAILED CREATING TABLE AppUserAssignmentSession >>>'
+go
+
+/* 
  * TABLE: AssignmentSession 
  */
 
 CREATE TABLE AssignmentSession(
     AssignmentSessionId    int              IDENTITY(1,1),
     SessionName            nvarchar(100)    NOT NULL,
+    IsCurrent              bit              NOT NULL,
     Created                datetime         NOT NULL,
     CreatedBy              nvarchar(100)    NOT NULL,
     Updated                datetime         NULL,
@@ -51,6 +78,28 @@ ELSE
     PRINT '<<< FAILED CREATING TABLE AssignmentSession >>>'
 go
 
+/* 
+ * TABLE: Location 
+ */
+
+CREATE TABLE Location(
+    LocationId      int              IDENTITY(1,1),
+    LocationName    nvarchar(100)    NOT NULL,
+    Created         datetime         NOT NULL,
+    CreatedBy       nvarchar(100)    NOT NULL,
+    Updated         datetime         NULL,
+    UpdatedBy       nvarchar(100)    NULL,
+    CONSTRAINT PK_Location PRIMARY KEY NONCLUSTERED (LocationId)
+)
+go
+
+
+
+IF OBJECT_ID('Location') IS NOT NULL
+    PRINT '<<< CREATED TABLE Location >>>'
+ELSE
+    PRINT '<<< FAILED CREATING TABLE Location >>>'
+go
 
 /* 
  * TABLE: Panel 
@@ -60,6 +109,7 @@ CREATE TABLE Panel(
     PanelId                int              IDENTITY(1,1),
     PanelName              nvarchar(100)    NOT NULL,
     AssignmentSessionId    int              NOT NULL,
+    LocationId             int              NULL,
     Created                datetime         NOT NULL,
     CreatedBy              nvarchar(100)    NOT NULL,
     Updated                datetime         NULL,
@@ -209,6 +259,7 @@ CREATE TABLE ScoreItem(
     MinimumScore       decimal(18, 2)    NOT NULL,
     MaximumScore       decimal(18, 2)    NOT NULL,
     ScoreItemTypeId    int               NOT NULL,
+    IsMandatory        bit               NOT NULL,
     IsActive           bit               NOT NULL,
     Created            datetime          NOT NULL,
     CreatedBy          nvarchar(100)     NOT NULL,
@@ -307,6 +358,7 @@ go
 CREATE TABLE Team(
     TeamId                 int              IDENTITY(1,1),
     TeamName               nvarchar(150)    NOT NULL,
+    Topic                  nvarchar(100)    NULL,
     AssignmentSessionId    int              NOT NULL,
     Created                datetime         NOT NULL,
     CreatedBy              nvarchar(100)    NOT NULL,
@@ -421,12 +473,32 @@ ELSE
 go
 
 /* 
+ * TABLE: AppUserAssignmentSession 
+ */
+
+ALTER TABLE AppUserAssignmentSession ADD CONSTRAINT FK_AppUserAssignmentSession_AppUser 
+    FOREIGN KEY (UserId)
+    REFERENCES AppUser(UserId)
+go
+
+ALTER TABLE AppUserAssignmentSession ADD CONSTRAINT FK_AppUserAssignmentSession_AssignmentSession 
+    FOREIGN KEY (AssignmentSessionId)
+    REFERENCES AssignmentSession(AssignmentSessionId)
+go
+
+
+/* 
  * TABLE: Panel 
  */
 
 ALTER TABLE Panel ADD CONSTRAINT FK_Panel_AssignmentSession 
     FOREIGN KEY (AssignmentSessionId)
     REFERENCES AssignmentSession(AssignmentSessionId)
+go
+
+ALTER TABLE Panel ADD CONSTRAINT FK_Panel_Location 
+    FOREIGN KEY (LocationId)
+    REFERENCES Location(LocationId)
 go
 
 
@@ -574,13 +646,13 @@ go
  * TABLE: TeamSplitHistory 
  */
 
-ALTER TABLE TeamSplitHistory ADD CONSTRAINT FK_TeamSplitHistory_Te4 
-    FOREIGN KEY (ParentTeamId)
+ALTER TABLE TeamSplitHistory ADD CONSTRAINT FK_TeamSplitHistory_Te2 
+    FOREIGN KEY (TeamId)
     REFERENCES Team(TeamId)
 go
 
-ALTER TABLE TeamSplitHistory ADD CONSTRAINT FK_TeamSplitHistory_Team 
-    FOREIGN KEY (TeamId)
+ALTER TABLE TeamSplitHistory ADD CONSTRAINT FK_TeamSplitHistory_Te4 
+    FOREIGN KEY (ParentTeamId)
     REFERENCES Team(TeamId)
 go
 

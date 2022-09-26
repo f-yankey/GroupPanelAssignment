@@ -19,6 +19,7 @@ namespace GroupPanelAssignment.Data.Models
 
         public int TeamId { get; set; }
         public string TeamName { get; set; }
+        public string Topic { get; set; }
         public int AssignmentSessionId { get; set; }
         public DateTime Created { get; set; }
         public string CreatedBy { get; set; }

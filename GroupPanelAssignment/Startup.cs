@@ -31,7 +31,7 @@ namespace GroupPanelAssignment
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-            services.AddDbContext<PanelTeamAssignDbContext>
+            services.AddDbContext<GroPanDbContext>
             (
                 options => options.UseSqlServer(Configuration.GetConnectionString("default"))
             );

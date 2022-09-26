@@ -12,8 +12,8 @@ namespace GroupPanelAssignment.Data
     {
         public static void Initialize(IServiceProvider serviceProvider)
         {
-            using (var context = new PanelTeamAssignDbContext(
-                serviceProvider.GetRequiredService<DbContextOptions<PanelTeamAssignDbContext>>()))
+            using (var context = new GroPanDbContext(
+                serviceProvider.GetRequiredService<DbContextOptions<GroPanDbContext>>()))
             {
 
                 bool containsRole = context.Roles.Any();
@@ -43,12 +43,12 @@ namespace GroupPanelAssignment.Data
             }
         }
 
-        private static void SaveContext(PanelTeamAssignDbContext context)
+        private static void SaveContext(GroPanDbContext context)
         {
             context.SaveChanges();
         }
 
-        private static void PopulateScoreItemTypes(PanelTeamAssignDbContext context)
+        private static void PopulateScoreItemTypes(GroPanDbContext context)
         {
             context.ScoreItemTypes.AddRange(
                 new ScoreItemType
@@ -67,7 +67,7 @@ namespace GroupPanelAssignment.Data
 
         }
 
-        private static void PopulateRoles(PanelTeamAssignDbContext context)
+        private static void PopulateRoles(GroPanDbContext context)
         {
             context.Roles.AddRange(
                 new Role
@@ -104,7 +104,7 @@ namespace GroupPanelAssignment.Data
 
         }
 
-        private static void PopulateLocations(PanelTeamAssignDbContext context)
+        private static void PopulateLocations(GroPanDbContext context)
         {
             context.Locations.AddRange(
                  new Location

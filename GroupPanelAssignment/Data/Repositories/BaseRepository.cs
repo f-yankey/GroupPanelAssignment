@@ -8,9 +8,9 @@ namespace GroupPanelAssignment.Data.Repositories
 {
     public class BaseRepository
     {
-        private PanelTeamAssignDbContext _dbContext;
+        private GroPanDbContext _dbContext;
 
-        public BaseRepository(PanelTeamAssignDbContext dbContext)
+        public BaseRepository(GroPanDbContext dbContext)
         {
             _dbContext = dbContext;
         }
