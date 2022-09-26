@@ -6,18 +6,19 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace GroupPanelAssignment.Data.Models
 {
-    public partial class PanelTeamAssignDbContext : DbContext
+    public partial class GroPanDbContext : DbContext
     {
-        public PanelTeamAssignDbContext()
+        public GroPanDbContext()
         {
         }
 
-        public PanelTeamAssignDbContext(DbContextOptions<PanelTeamAssignDbContext> options)
+        public GroPanDbContext(DbContextOptions<GroPanDbContext> options)
             : base(options)
         {
         }
 
         public virtual DbSet<AppUser> AppUsers { get; set; }
+        public virtual DbSet<AppUserAssignmentSession> AppUserAssignmentSessions { get; set; }
         public virtual DbSet<AssignmentSession> AssignmentSessions { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<Panel> Panels { get; set; }
@@ -38,7 +39,7 @@ namespace GroupPanelAssignment.Data.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-           
+            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -73,6 +74,36 @@ namespace GroupPanelAssignment.Data.Models
                 entity.Property(e => e.Updated).HasColumnType("datetime");
 
                 entity.Property(e => e.UpdatedBy).HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<AppUserAssignmentSession>(entity =>
+            {
+                entity.HasKey(e => e.AppUserAssignmentSessionId)
+                    .IsClustered(false);
+
+                entity.ToTable("AppUserAssignmentSession");
+
+                entity.Property(e => e.Created).HasColumnType("datetime");
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.Updated).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedBy).HasMaxLength(100);
+
+                entity.HasOne(d => d.AssignmentSession)
+                    .WithMany(p => p.AppUserAssignmentSessions)
+                    .HasForeignKey(d => d.AssignmentSessionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_AppUserAssignmentSession_AssignmentSession");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AppUserAssignmentSessions)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_AppUserAssignmentSession_AppUser");
             });
 
             modelBuilder.Entity<AssignmentSession>(entity =>
@@ -447,6 +478,8 @@ namespace GroupPanelAssignment.Data.Models
                 entity.Property(e => e.TeamName)
                     .IsRequired()
                     .HasMaxLength(150);
+
+                entity.Property(e => e.Topic).HasMaxLength(100);
 
                 entity.Property(e => e.Updated).HasColumnType("datetime");
 

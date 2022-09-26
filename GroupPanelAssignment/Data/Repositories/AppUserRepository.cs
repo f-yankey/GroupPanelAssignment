@@ -9,7 +9,7 @@ namespace GroupPanelAssignment.Data.Repositories
 {
     public class AppUserRepository : BaseRepository, IAppUserRepository
     {
-        public AppUserRepository(PanelTeamAssignDbContext dbContext) : base(dbContext)
+        public AppUserRepository(GroPanDbContext dbContext) : base(dbContext)
         {
         }
     }

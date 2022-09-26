@@ -9,7 +9,7 @@ namespace GroupPanelAssignment.Data.Repositories
 {
     public class SessionScoreItemRepository : BaseRepository, ISessionScoreItemRepository
     {
-        public SessionScoreItemRepository(PanelTeamAssignDbContext dbContext) : base(dbContext)
+        public SessionScoreItemRepository(GroPanDbContext dbContext) : base(dbContext)
         {
         }
     }

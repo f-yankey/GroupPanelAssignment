@@ -9,6 +9,7 @@ namespace GroupPanelAssignment.Data.Models
     {
         public AppUser()
         {
+            AppUserAssignmentSessions = new HashSet<AppUserAssignmentSession>();
             PanelMembers = new HashSet<PanelMember>();
             TeamMembers = new HashSet<TeamMember>();
             TeamSupervisors = new HashSet<TeamSupervisor>();
@@ -25,6 +26,7 @@ namespace GroupPanelAssignment.Data.Models
         public DateTime? Updated { get; set; }
         public string UpdatedBy { get; set; }
 
+        public virtual ICollection<AppUserAssignmentSession> AppUserAssignmentSessions { get; set; }
         public virtual ICollection<PanelMember> PanelMembers { get; set; }
         public virtual ICollection<TeamMember> TeamMembers { get; set; }
         public virtual ICollection<TeamSupervisor> TeamSupervisors { get; set; }

@@ -9,7 +9,7 @@ namespace GroupPanelAssignment.Data.Repositories
 {
     public class ScoreItemTypeRepository : BaseRepository, IScoreItemTypeRepository
     {
-        public ScoreItemTypeRepository(PanelTeamAssignDbContext dbContext) : base(dbContext)
+        public ScoreItemTypeRepository(GroPanDbContext dbContext) : base(dbContext)
         {
         }
     }

@@ -9,7 +9,7 @@ namespace GroupPanelAssignment.Data.Repositories
 {
     public class TeamSplitHistoryRepository : BaseRepository, ITeamSplitHistoryRepository
     {
-        public TeamSplitHistoryRepository(PanelTeamAssignDbContext dbContext) : base(dbContext)
+        public TeamSplitHistoryRepository(GroPanDbContext dbContext) : base(dbContext)
         {
         }
     }

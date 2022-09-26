@@ -9,6 +9,7 @@ namespace GroupPanelAssignment.Data.Models
     {
         public AssignmentSession()
         {
+            AppUserAssignmentSessions = new HashSet<AppUserAssignmentSession>();
             Panels = new HashSet<Panel>();
             ScoringSessions = new HashSet<ScoringSession>();
             SessionScoreItems = new HashSet<SessionScoreItem>();
@@ -17,11 +18,13 @@ namespace GroupPanelAssignment.Data.Models
 
         public int AssignmentSessionId { get; set; }
         public string SessionName { get; set; }
+        public bool IsCurrent { get; set; }
         public DateTime Created { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? Updated { get; set; }
         public string UpdatedBy { get; set; }
 
+        public virtual ICollection<AppUserAssignmentSession> AppUserAssignmentSessions { get; set; }
         public virtual ICollection<Panel> Panels { get; set; }
         public virtual ICollection<ScoringSession> ScoringSessions { get; set; }
         public virtual ICollection<SessionScoreItem> SessionScoreItems { get; set; }

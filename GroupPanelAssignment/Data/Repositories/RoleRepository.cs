@@ -9,7 +9,7 @@ namespace GroupPanelAssignment.Data.Repositories
 {
     public class RoleRepository : BaseRepository, IRoleRepository
     {
-        public RoleRepository(PanelTeamAssignDbContext dbContext) : base(dbContext)
+        public RoleRepository(GroPanDbContext dbContext) : base(dbContext)
         {
         }
     }
