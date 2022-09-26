@@ -17,6 +17,7 @@ namespace GroupPanelAssignment.Data.Models
         public decimal MinimumScore { get; set; }
         public decimal MaximumScore { get; set; }
         public int ScoreItemTypeId { get; set; }
+        public bool IsMandatory { get; set; }
         public bool IsActive { get; set; }
         public DateTime Created { get; set; }
         public string CreatedBy { get; set; }
