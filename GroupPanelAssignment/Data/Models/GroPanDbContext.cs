@@ -20,7 +20,7 @@ namespace GroupPanelAssignment.Data.Models
         public virtual DbSet<AppUser> AppUsers { get; set; }
         public virtual DbSet<AppUserAssignmentSession> AppUserAssignmentSessions { get; set; }
         public virtual DbSet<AssignmentSession> AssignmentSessions { get; set; }
-        public virtual DbSet<Cwagrouping> Cwagroupings { get; set; }
+        public virtual DbSet<CwaGrouping> CwaGroupings { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<Panel> Panels { get; set; }
         public virtual DbSet<PanelMember> PanelMembers { get; set; }
@@ -41,7 +41,7 @@ namespace GroupPanelAssignment.Data.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-
+           
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -130,12 +130,13 @@ namespace GroupPanelAssignment.Data.Models
                 entity.Property(e => e.UpdatedBy).HasMaxLength(100);
             });
 
-            modelBuilder.Entity<Cwagrouping>(entity =>
+            modelBuilder.Entity<CwaGrouping>(entity =>
             {
                 entity.HasKey(e => e.CwagroupingId)
+                    .HasName("PK_CWAGrouping")
                     .IsClustered(false);
 
-                entity.ToTable("CWAGrouping");
+                entity.ToTable("CwaGrouping");
 
                 entity.Property(e => e.CwagroupingId).HasColumnName("CWAGroupingId");
 
@@ -154,7 +155,7 @@ namespace GroupPanelAssignment.Data.Models
                 entity.Property(e => e.UpdatedBy).HasMaxLength(100);
 
                 entity.HasOne(d => d.AssignmentSession)
-                    .WithMany(p => p.Cwagroupings)
+                    .WithMany(p => p.CwaGroupings)
                     .HasForeignKey(d => d.AssignmentSessionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CWAGrouping_AssignmentSession");
@@ -512,6 +513,8 @@ namespace GroupPanelAssignment.Data.Models
                 entity.Property(e => e.Cwa)
                     .HasColumnType("decimal(18, 2)")
                     .HasColumnName("CWA");
+
+                entity.Property(e => e.ProgrammestreamName).HasMaxLength(150);
 
                 entity.Property(e => e.Updated).HasColumnType("datetime");
 

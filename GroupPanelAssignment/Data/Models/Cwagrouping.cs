@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace GroupPanelAssignment.Data.Models
 {
-    public partial class Cwagrouping
+    public partial class CwaGrouping
     {
         public int CwagroupingId { get; set; }
         public int AssignmentSessionId { get; set; }
