@@ -10,9 +10,11 @@ namespace GroupPanelAssignment.Data.Models
         public AssignmentSession()
         {
             AppUserAssignmentSessions = new HashSet<AppUserAssignmentSession>();
+            Cwagroupings = new HashSet<Cwagrouping>();
             Panels = new HashSet<Panel>();
             ScoringSessions = new HashSet<ScoringSession>();
             SessionScoreItems = new HashSet<SessionScoreItem>();
+            StudentCwas = new HashSet<StudentCwa>();
             Teams = new HashSet<Team>();
         }
 
@@ -25,9 +27,11 @@ namespace GroupPanelAssignment.Data.Models
         public string UpdatedBy { get; set; }
 
         public virtual ICollection<AppUserAssignmentSession> AppUserAssignmentSessions { get; set; }
+        public virtual ICollection<Cwagrouping> Cwagroupings { get; set; }
         public virtual ICollection<Panel> Panels { get; set; }
         public virtual ICollection<ScoringSession> ScoringSessions { get; set; }
         public virtual ICollection<SessionScoreItem> SessionScoreItems { get; set; }
+        public virtual ICollection<StudentCwa> StudentCwas { get; set; }
         public virtual ICollection<Team> Teams { get; set; }
     }
 }

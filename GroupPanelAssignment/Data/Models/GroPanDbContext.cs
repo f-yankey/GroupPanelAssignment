@@ -20,6 +20,7 @@ namespace GroupPanelAssignment.Data.Models
         public virtual DbSet<AppUser> AppUsers { get; set; }
         public virtual DbSet<AppUserAssignmentSession> AppUserAssignmentSessions { get; set; }
         public virtual DbSet<AssignmentSession> AssignmentSessions { get; set; }
+        public virtual DbSet<Cwagrouping> Cwagroupings { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<Panel> Panels { get; set; }
         public virtual DbSet<PanelMember> PanelMembers { get; set; }
@@ -31,6 +32,7 @@ namespace GroupPanelAssignment.Data.Models
         public virtual DbSet<ScoreItemType> ScoreItemTypes { get; set; }
         public virtual DbSet<ScoringSession> ScoringSessions { get; set; }
         public virtual DbSet<SessionScoreItem> SessionScoreItems { get; set; }
+        public virtual DbSet<StudentCwa> StudentCwas { get; set; }
         public virtual DbSet<Team> Teams { get; set; }
         public virtual DbSet<TeamMember> TeamMembers { get; set; }
         public virtual DbSet<TeamSplitHistory> TeamSplitHistories { get; set; }
@@ -39,7 +41,11 @@ namespace GroupPanelAssignment.Data.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-          
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=DESKTOP-004VTUI\\SQLEXPRESS;Database=GroPanDb;Trusted_Connection=True;");
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -126,6 +132,36 @@ namespace GroupPanelAssignment.Data.Models
                 entity.Property(e => e.Updated).HasColumnType("datetime");
 
                 entity.Property(e => e.UpdatedBy).HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<Cwagrouping>(entity =>
+            {
+                entity.HasKey(e => e.CwagroupingId)
+                    .IsClustered(false);
+
+                entity.ToTable("CWAGrouping");
+
+                entity.Property(e => e.CwagroupingId).HasColumnName("CWAGroupingId");
+
+                entity.Property(e => e.Created).HasColumnType("datetime");
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.Max).HasColumnType("decimal(10, 2)");
+
+                entity.Property(e => e.Min).HasColumnType("decimal(10, 2)");
+
+                entity.Property(e => e.Updated).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedBy).HasMaxLength(100);
+
+                entity.HasOne(d => d.AssignmentSession)
+                    .WithMany(p => p.Cwagroupings)
+                    .HasForeignKey(d => d.AssignmentSessionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CWAGrouping_AssignmentSession");
             });
 
             modelBuilder.Entity<Location>(entity =>
@@ -460,6 +496,42 @@ namespace GroupPanelAssignment.Data.Models
                     .HasForeignKey(d => d.ScoreItemId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SessionScoreItem_ScoreItem");
+            });
+
+            modelBuilder.Entity<StudentCwa>(entity =>
+            {
+                entity.HasKey(e => e.StudentCwaid)
+                    .IsClustered(false);
+
+                entity.ToTable("StudentCWA");
+
+                entity.Property(e => e.StudentCwaid).HasColumnName("StudentCWAId");
+
+                entity.Property(e => e.Created).HasColumnType("datetime");
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.Cwa)
+                    .HasColumnType("decimal(18, 2)")
+                    .HasColumnName("CWA");
+
+                entity.Property(e => e.Updated).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedBy).HasMaxLength(100);
+
+                entity.HasOne(d => d.AssignmentSession)
+                    .WithMany(p => p.StudentCwas)
+                    .HasForeignKey(d => d.AssignmentSessionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_StudentCWA_AssignmentSession");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.StudentCwas)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_StudentCWA_AppUser");
             });
 
             modelBuilder.Entity<Team>(entity =>

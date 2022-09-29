@@ -38,7 +38,7 @@ CREATE TABLE AppUserAssignmentSession(
     AppUserAssignmentSessionId    int              IDENTITY(1,1),
     UserId                        int              NOT NULL,
     AssignmentSessionId           int              NOT NULL,
-    Created                       datetime         NULL,
+    Created                       datetime         NOT NULL,
     CreatedBy                     nvarchar(100)    NOT NULL,
     Updated                       datetime         NULL,
     UpdatedBy                     nvarchar(100)    NULL,
@@ -76,6 +76,31 @@ IF OBJECT_ID('AssignmentSession') IS NOT NULL
     PRINT '<<< CREATED TABLE AssignmentSession >>>'
 ELSE
     PRINT '<<< FAILED CREATING TABLE AssignmentSession >>>'
+go
+
+/* 
+ * TABLE: CWAGrouping 
+ */
+
+CREATE TABLE CWAGrouping(
+    CWAGroupingId          int               IDENTITY(1,1),
+    AssignmentSessionId    int               NOT NULL,
+    Min                    decimal(10, 2)    NOT NULL,
+    Max                    decimal(10, 2)    NOT NULL,
+    Created                datetime          NOT NULL,
+    CreatedBy              nvarchar(100)     NOT NULL,
+    Updated                datetime          NULL,
+    UpdatedBy              nvarchar(100)     NULL,
+    CONSTRAINT PK_CWAGrouping PRIMARY KEY NONCLUSTERED (CWAGroupingId)
+)
+go
+
+
+
+IF OBJECT_ID('CWAGrouping') IS NOT NULL
+    PRINT '<<< CREATED TABLE CWAGrouping >>>'
+ELSE
+    PRINT '<<< FAILED CREATING TABLE CWAGrouping >>>'
 go
 
 /* 
@@ -352,6 +377,31 @@ ELSE
 go
 
 /* 
+ * TABLE: StudentCWA 
+ */
+
+CREATE TABLE StudentCWA(
+    StudentCWAId           int               IDENTITY(1,1),
+    UserId                 int               NOT NULL,
+    CWA                    decimal(18, 2)    NOT NULL,
+    AssignmentSessionId    int               NOT NULL,
+    Created                datetime          NOT NULL,
+    CreatedBy              nvarchar(100)     NOT NULL,
+    Updated                datetime          NULL,
+    UpdatedBy              nvarchar(100)     NULL,
+    CONSTRAINT PK_StudentCWA PRIMARY KEY NONCLUSTERED (StudentCWAId)
+)
+go
+
+
+
+IF OBJECT_ID('StudentCWA') IS NOT NULL
+    PRINT '<<< CREATED TABLE StudentCWA >>>'
+ELSE
+    PRINT '<<< FAILED CREATING TABLE StudentCWA >>>'
+go
+
+/* 
  * TABLE: Team 
  */
 
@@ -488,6 +538,16 @@ go
 
 
 /* 
+ * TABLE: CWAGrouping 
+ */
+
+ALTER TABLE CWAGrouping ADD CONSTRAINT FK_CWAGrouping_AssignmentSession 
+    FOREIGN KEY (AssignmentSessionId)
+    REFERENCES AssignmentSession(AssignmentSessionId)
+go
+
+
+/* 
  * TABLE: Panel 
  */
 
@@ -614,6 +674,21 @@ go
 ALTER TABLE SessionScoreItem ADD CONSTRAINT FK_SessionScoreItem_ScoreItem 
     FOREIGN KEY (ScoreItemId)
     REFERENCES ScoreItem(ScoreItemId)
+go
+
+
+/* 
+ * TABLE: StudentCWA 
+ */
+
+ALTER TABLE StudentCWA ADD CONSTRAINT FK_StudentCWA_AppUser 
+    FOREIGN KEY (UserId)
+    REFERENCES AppUser(UserId)
+go
+
+ALTER TABLE StudentCWA ADD CONSTRAINT FK_StudentCWA_AssignmentSession 
+    FOREIGN KEY (AssignmentSessionId)
+    REFERENCES AssignmentSession(AssignmentSessionId)
 go
 
 
