@@ -60,6 +60,8 @@ namespace GroupPanelAssignment
             services.AddScoped<ITeamSplitHistoryRepository, TeamSplitHistoryRepository>();
             services.AddScoped<ITeamSupervisorRepository, TeamSupervisorRepository>();
             services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+            services.AddScoped<IStudentCwaRepository, StudentCwaRepository>();
+            services.AddScoped<ICwaGroupingRepository, CwaGroupingRepository>();
             #endregion
 
         }
