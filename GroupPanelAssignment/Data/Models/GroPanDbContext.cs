@@ -41,7 +41,7 @@ namespace GroupPanelAssignment.Data.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-           
+            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -497,12 +497,10 @@ namespace GroupPanelAssignment.Data.Models
 
             modelBuilder.Entity<StudentCwa>(entity =>
             {
-                entity.HasKey(e => e.StudentCwaid)
+                entity.HasKey(e => e.StudentCwaId)
                     .IsClustered(false);
 
                 entity.ToTable("StudentCWA");
-
-                entity.Property(e => e.StudentCwaid).HasColumnName("StudentCWAId");
 
                 entity.Property(e => e.Created).HasColumnType("datetime");
 

@@ -7,7 +7,7 @@ namespace GroupPanelAssignment.Data.Models
 {
     public partial class StudentCwa
     {
-        public int StudentCwaid { get; set; }
+        public int StudentCwaId { get; set; }
         public int AssignmentSessionId { get; set; }
         public int UserId { get; set; }
         public decimal Cwa { get; set; }
