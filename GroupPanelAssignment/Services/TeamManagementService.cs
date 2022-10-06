@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GroupPanelAssignment.Data.Services
+namespace GroupPanelAssignment.Services
 {
     public class TeamManagementService : ITeamManagementService
     {
