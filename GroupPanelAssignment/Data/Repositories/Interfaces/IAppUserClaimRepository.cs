@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace GroupPanelAssignment.Data.Repositories.Interfaces
 {
-    public interface IStudentCwaRepository
+    public interface IAppUserClaimRepository
     {
     }
 }

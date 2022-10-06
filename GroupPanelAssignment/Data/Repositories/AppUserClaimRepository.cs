@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace GroupPanelAssignment.Data.Repositories
 {
-    public class StudentCwaRepository : BaseRepository, IStudentCwaRepository
+    public class AppUserClaimRepository : BaseRepository, IAppUserClaimRepository
     {
-        public StudentCwaRepository(GroPanDbContext dbContext) : base(dbContext)
+        public AppUserClaimRepository(GroPanDbContext dbContext) : base(dbContext)
         {
         }
     }
