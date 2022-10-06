@@ -1,4 +1,6 @@
-﻿using GroupPanelAssignment.Data.Services.Interfaces;
+﻿using GroupPanelAssignment.Data.Models;
+using GroupPanelAssignment.Data.Repositories.Interfaces;
+using GroupPanelAssignment.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +10,26 @@ namespace GroupPanelAssignment.Services
 {
     public class UserManagementService : IUserManagementService
     {
-        public UserManagementService()
-        {
+        private IRoleRepository _roleRepository;
+        private IAppUserRepository _appUserRepository;
 
+        public UserManagementService
+            (
+            IRoleRepository roleRepository,
+            IAppUserRepository appUserRepository)
+        {
+            _roleRepository = roleRepository;
+            _appUserRepository = appUserRepository;
+        }
+
+        public List<AppUser> GetAppUsers(string role)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Role> GetRoles()
+        {
+            throw new NotImplementedException();
         }
     }
 }

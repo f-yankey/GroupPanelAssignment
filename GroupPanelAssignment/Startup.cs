@@ -2,8 +2,8 @@ using GroupPanelAssignment.Data;
 using GroupPanelAssignment.Data.Models;
 using GroupPanelAssignment.Data.Repositories;
 using GroupPanelAssignment.Data.Repositories.Interfaces;
-using GroupPanelAssignment.Data.Services;
-using GroupPanelAssignment.Data.Services.Interfaces;
+using GroupPanelAssignment.Services;
+using GroupPanelAssignment.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -89,11 +89,9 @@ namespace GroupPanelAssignment
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseSession();
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
