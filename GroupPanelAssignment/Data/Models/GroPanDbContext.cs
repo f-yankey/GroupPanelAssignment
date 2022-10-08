@@ -42,6 +42,7 @@ namespace GroupPanelAssignment.Data.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -425,6 +426,10 @@ namespace GroupPanelAssignment.Data.Models
                     .IsClustered(false);
 
                 entity.ToTable("Role");
+
+                entity.HasIndex(e => e.DisplayOrder, "IX_Role_DisplayOrder")
+                    .IsUnique()
+                    .IsClustered();
 
                 entity.Property(e => e.Created).HasColumnType("datetime");
 

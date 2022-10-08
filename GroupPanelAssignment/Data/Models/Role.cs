@@ -14,6 +14,7 @@ namespace GroupPanelAssignment.Data.Models
 
         public int RoleId { get; set; }
         public string RoleName { get; set; }
+        public int DisplayOrder { get; set; }
         public DateTime Created { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? Updated { get; set; }

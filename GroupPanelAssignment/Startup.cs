@@ -4,6 +4,7 @@ using GroupPanelAssignment.Data.Repositories;
 using GroupPanelAssignment.Data.Repositories.Interfaces;
 using GroupPanelAssignment.Services;
 using GroupPanelAssignment.Services.Interfaces;
+using GroupPanelAssignment.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -35,6 +36,10 @@ namespace GroupPanelAssignment
             (
                 options => options.UseSqlServer(Configuration.GetConnectionString("default"))
             );
+
+            services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromMinutes(1);//You can set Time   
+            });
 
             #region Service
             services.AddScoped<IUserManagementService, UserManagementService>();
@@ -92,6 +97,7 @@ namespace GroupPanelAssignment
             app.UseSession();
             app.UseRouting();
             app.UseAuthorization();
+            app.UseRolesInitializer();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
