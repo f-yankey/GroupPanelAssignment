@@ -42,7 +42,7 @@ namespace GroupPanelAssignment.Data.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            
+          
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -55,6 +55,10 @@ namespace GroupPanelAssignment.Data.Models
                     .IsClustered(false);
 
                 entity.ToTable("AppUser");
+
+                entity.Property(e => e.UserId)
+                    .HasMaxLength(180)
+                    .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.Created).HasColumnType("datetime");
 
@@ -96,6 +100,10 @@ namespace GroupPanelAssignment.Data.Models
 
                 entity.Property(e => e.UpdatedBy).HasMaxLength(100);
 
+                entity.Property(e => e.UserId)
+                    .IsRequired()
+                    .HasMaxLength(180);
+
                 entity.HasOne(d => d.AssignmentSession)
                     .WithMany(p => p.AppUserAssignmentSessions)
                     .HasForeignKey(d => d.AssignmentSessionId)
@@ -125,6 +133,10 @@ namespace GroupPanelAssignment.Data.Models
                 entity.Property(e => e.Updated).HasColumnType("datetime");
 
                 entity.Property(e => e.UpdatedBy).HasMaxLength(100);
+
+                entity.Property(e => e.UserId)
+                    .IsRequired()
+                    .HasMaxLength(180);
 
                 entity.Property(e => e.Value)
                     .IsRequired()
@@ -293,6 +305,10 @@ namespace GroupPanelAssignment.Data.Models
 
                 entity.Property(e => e.UpdatedBy).HasMaxLength(100);
 
+                entity.Property(e => e.UserId)
+                    .IsRequired()
+                    .HasMaxLength(180);
+
                 entity.HasOne(d => d.Panel)
                     .WithMany(p => p.PanelMembers)
                     .HasForeignKey(d => d.PanelId)
@@ -430,6 +446,10 @@ namespace GroupPanelAssignment.Data.Models
                 entity.HasIndex(e => e.DisplayOrder, "IX_Role_DisplayOrder")
                     .IsUnique()
                     .IsClustered();
+
+                entity.Property(e => e.RoleId)
+                    .HasMaxLength(180)
+                    .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.Created).HasColumnType("datetime");
 
@@ -609,6 +629,10 @@ namespace GroupPanelAssignment.Data.Models
 
                 entity.Property(e => e.UpdatedBy).HasMaxLength(10);
 
+                entity.Property(e => e.UserId)
+                    .IsRequired()
+                    .HasMaxLength(180);
+
                 entity.HasOne(d => d.Team)
                     .WithMany(p => p.TeamMembers)
                     .HasForeignKey(d => d.TeamId)
@@ -669,6 +693,10 @@ namespace GroupPanelAssignment.Data.Models
 
                 entity.Property(e => e.UpdatedBy).HasMaxLength(100);
 
+                entity.Property(e => e.UserId)
+                    .IsRequired()
+                    .HasMaxLength(180);
+
                 entity.HasOne(d => d.Team)
                     .WithMany(p => p.TeamSupervisors)
                     .HasForeignKey(d => d.TeamId)
@@ -695,9 +723,17 @@ namespace GroupPanelAssignment.Data.Models
                     .IsRequired()
                     .HasMaxLength(100);
 
+                entity.Property(e => e.RoleId)
+                    .IsRequired()
+                    .HasMaxLength(180);
+
                 entity.Property(e => e.Updated).HasColumnType("datetime");
 
                 entity.Property(e => e.UpdatedBy).HasMaxLength(100);
+
+                entity.Property(e => e.UserId)
+                    .IsRequired()
+                    .HasMaxLength(180);
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.UserRoles)

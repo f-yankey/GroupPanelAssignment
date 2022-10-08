@@ -8,7 +8,7 @@ namespace GroupPanelAssignment.Data.Repositories
 {
     public class BaseRepository
     {
-        private GroPanDbContext _dbContext;
+        protected GroPanDbContext _dbContext;
 
         public BaseRepository(GroPanDbContext dbContext)
         {

@@ -8,6 +8,8 @@ using GroupPanelAssignment.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,6 +34,22 @@ namespace GroupPanelAssignment
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
+                //.AddRazorPagesOptions(opts =>
+                //{
+                //    opts.Conventions.Add(
+                //    new PageRouteTransformerConvention(
+                //    new KebabCaseParameterTransformer()));
+                //    //opts.Conventions.AddPageRoute(
+                //    //"/Search/Products/StartSearch", "/search-products");
+                //});
+
+            services.Configure<RouteOptions>(options =>
+            {
+                options.AppendTrailingSlash = true;
+                options.LowercaseUrls = true;
+                //options.LowercaseQueryStrings = true;
+            });
+
             services.AddDbContext<GroPanDbContext>
             (
                 options => options.UseSqlServer(Configuration.GetConnectionString("default"))

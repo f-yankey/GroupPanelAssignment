@@ -9,7 +9,7 @@ namespace GroupPanelAssignment.Data.Models
     {
         public int AppUserClaimId { get; set; }
         public int AssignmentSessionId { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public int ClaimId { get; set; }
         public string Value { get; set; }
         public DateTime Created { get; set; }

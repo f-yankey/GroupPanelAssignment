@@ -8,8 +8,8 @@ namespace GroupPanelAssignment.Data.Models
     public partial class UserRole
     {
         public int UserRoleId { get; set; }
-        public int UserId { get; set; }
-        public int RoleId { get; set; }
+        public string UserId { get; set; }
+        public string RoleId { get; set; }
         public DateTime Created { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? Updated { get; set; }

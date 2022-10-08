@@ -1,5 +1,6 @@
 ﻿using GroupPanelAssignment.Data.Models;
 using GroupPanelAssignment.Data.Repositories.Interfaces;
+using GroupPanelAssignment.Data.ViewModels;
 using GroupPanelAssignment.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -22,12 +23,13 @@ namespace GroupPanelAssignment.Services
             _appUserRepository = appUserRepository;
         }
 
-        public List<AppUser> GetAppUsers(string role)
+        public List<UserViewModel> GetAppUsers(string role)
         {
-            throw new NotImplementedException();
+            List<UserViewModel> users = _appUserRepository.GetRoleUsers(role);
+            return users;
         }
 
-        public List<Role> GetRoles()
+        private List<Role> GetRoles()
         {
             throw new NotImplementedException();
         }

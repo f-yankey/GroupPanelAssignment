@@ -72,34 +72,40 @@ namespace GroupPanelAssignment.Data
             context.Roles.AddRange(
                 new Role
                 {
-                    RoleName = "Super Admin",
-                    Created = DateTime.Now,
-                    CreatedBy = "admin"
-                },
-                new Role
-                {
-                    RoleName = "Admin",
-                    Created = DateTime.Now,
-                    CreatedBy = "admin"
-                },
-                new Role
-                {
+                    DisplayOrder = 1,
                     RoleName = "Student",
                     Created = DateTime.Now,
                     CreatedBy = "admin"
                 },
                 new Role
                 {
+                    DisplayOrder = 2,
                     RoleName = "Supervisor",
                     Created = DateTime.Now,
                     CreatedBy = "admin"
                 },
                 new Role
                 {
+                    DisplayOrder = 3,
                     RoleName = "Panel Member",
                     Created = DateTime.Now,
                     CreatedBy = "admin"
+                },
+                new Role
+                {
+                    DisplayOrder = 4,
+                    RoleName = "Admin",
+                    Created = DateTime.Now,
+                    CreatedBy = "admin"
+                },
+                new Role
+                {
+                    DisplayOrder = 5,
+                    RoleName = "Super Admin",
+                    Created = DateTime.Now,
+                    CreatedBy = "admin"
                 }
+                
             );
 
         }

@@ -1,0 +1,38 @@
+﻿@page "/usermanagement/users/{role}"
+@model GroupPanelAssignment.Pages.UserManagement.UsersModel
+@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+    ViewData["Title"] = Model.Role;
+}
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title"> <b><i>"@CustomStringHelper.Capitalize(CustomStringHelper.ConvertToSpaced(Model.Role))"</i></b> List</h5>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Othernames</th>
+                            <th scope="col">Surname</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Results)
+                        {
+                            <tr>
+                                <th scope="row"></th>
+                                <td>@item.FirstName @item.Othernames </td>
+                                <td>@item.Surname</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
