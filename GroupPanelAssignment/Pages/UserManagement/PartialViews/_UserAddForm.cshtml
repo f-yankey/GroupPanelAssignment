@@ -1,0 +1,66 @@
+﻿@{
+    Layout = null;
+    var sessionRoles = Context.Session.Get<List<Role>>(ApplicationConstants.RolesInSession);
+}
+
+<div class="col-12">
+    <div class="input-group mb-3">
+        <span class="input-group-text" id="basic-addon1">Role</span>
+        <select class="form-select" multiple>
+            @foreach (var item in sessionRoles)
+            {
+            <option value="@item.RoleName">@item.RoleName</option>
+            }
+        </select>
+    </div>
+    <p class="" style="font-size:smaller"> <i>Hint: Hold Ctrl + Click to select multiple</i> </p>
+</div>
+
+<h6><b>Basic Information</b></h6>
+
+<div class="col-6">
+    <label for="inputNanme4" class="form-label">Username</label>
+    <input type="text" class="form-control" id="inputNanme4">
+</div>
+<div class="col-6">
+    <label for="inputEmail4" class="form-label">Email</label>
+    <input type="email" class="form-control" id="inputEmail4">
+</div>
+<div class="col-4">
+    <label for="inputNanme4" class="form-label">First Name</label>
+    <input type="text" class="form-control" id="inputNanme4">
+</div>
+<div class="col-4">
+    <label for="inputEmail4" class="form-label">Othernames</label>
+    <input type="text" class="form-control" id="inputEmail4">
+</div>
+<div class="col-4">
+    <label for="inputPassword4" class="form-label">Surname</label>
+    <input type="text" class="form-control" id="">
+</div>
+<div class="col-12">
+    <label for="inputAddress" class="form-label">Special ID</label>
+    <input type="text" class="form-control" id="inputAddress" placeholder="(Staff/Student Number) Eg: 60215421/20124581">
+</div>
+
+<br />
+<br />
+<h6><b>Extra Properties</b></h6>
+
+<div class="col-6">
+    <div class="input-group mb-3">
+        <span class="input-group-text" id="basic-addon1">Property Name</span>
+        <select class="form-select">
+            @foreach (var item in sessionRoles)
+            {
+            <option value="@item.RoleName">@item.RoleName</option>
+            }
+        </select>
+    </div>
+</div>
+<div class="col-6">
+    <div class="input-group mb-3">
+        <span class="input-group-text" id="basic-addon1">Value</span>
+        <input type="text" class="form-control"  placeholder="username/surname/othernames"  aria-label="Username" aria-describedby="basic-addon1">
+    </div>
+</div>
