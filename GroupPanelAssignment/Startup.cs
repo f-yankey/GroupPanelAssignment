@@ -85,6 +85,7 @@ namespace GroupPanelAssignment
             services.AddScoped<IUserRoleRepository, UserRoleRepository>();
             services.AddScoped<IAppUserClaimRepository, AppUserClaimRepository>();
             services.AddScoped<ICwaGroupingRepository, CwaGroupingRepository>();
+            services.AddScoped<IClaimRepository, ClaimRepository>();
             #endregion
 
         }

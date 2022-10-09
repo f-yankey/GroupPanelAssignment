@@ -10,6 +10,7 @@ namespace GroupPanelAssignment.Services.Interfaces
     public interface IUserManagementService
     {
         List<UserViewModel> GetAppUsers(string role);
+        List<Claim> GetAllClaims();
       
     }
 }

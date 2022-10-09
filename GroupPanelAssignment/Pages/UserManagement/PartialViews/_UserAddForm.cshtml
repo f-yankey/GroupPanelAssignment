@@ -1,66 +1,125 @@
-﻿@{
+﻿@model IEnumerable<Claim>
+@{
     Layout = null;
     var sessionRoles = Context.Session.Get<List<Role>>(ApplicationConstants.RolesInSession);
 }
 
-<div class="col-12">
-    <div class="input-group mb-3">
-        <span class="input-group-text" id="basic-addon1">Role</span>
-        <select class="form-select" multiple>
-            @foreach (var item in sessionRoles)
-            {
-            <option value="@item.RoleName">@item.RoleName</option>
-            }
-        </select>
+<form class="row g-3" method="post" id="user-add-form">
+
+    <div class="col-12">
+        <div class="input-group mb-3">
+            <span class="input-group-text" name="Roles">Role</span>
+            <select class="form-select" multiple>
+                @foreach (var item in sessionRoles)
+                {
+                    <option value="@item.RoleName">@item.RoleName</option>
+                }
+            </select>
+        </div>
+        <p class="" style="font-size:smaller"> <i>Hint: Hold Ctrl + Click to select multiple</i> </p>
     </div>
-    <p class="" style="font-size:smaller"> <i>Hint: Hold Ctrl + Click to select multiple</i> </p>
-</div>
 
-<h6><b>Basic Information</b></h6>
+    <h6><b>Basic Information</b></h6>
 
-<div class="col-6">
-    <label for="inputNanme4" class="form-label">Username</label>
-    <input type="text" class="form-control" id="inputNanme4">
-</div>
-<div class="col-6">
-    <label for="inputEmail4" class="form-label">Email</label>
-    <input type="email" class="form-control" id="inputEmail4">
-</div>
-<div class="col-4">
-    <label for="inputNanme4" class="form-label">First Name</label>
-    <input type="text" class="form-control" id="inputNanme4">
-</div>
-<div class="col-4">
-    <label for="inputEmail4" class="form-label">Othernames</label>
-    <input type="text" class="form-control" id="inputEmail4">
-</div>
-<div class="col-4">
-    <label for="inputPassword4" class="form-label">Surname</label>
-    <input type="text" class="form-control" id="">
-</div>
-<div class="col-12">
-    <label for="inputAddress" class="form-label">Special ID</label>
-    <input type="text" class="form-control" id="inputAddress" placeholder="(Staff/Student Number) Eg: 60215421/20124581">
-</div>
 
-<br />
-<br />
-<h6><b>Extra Properties</b></h6>
+    <div class="col-6">
+        <label for="Username" class="form-label">Username</label>
+        <input type="text" class="form-control" id="Username">
+    </div>
+    <div class="col-6">
+        <label for="Email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="Email">
+    </div>
 
-<div class="col-6">
-    <div class="input-group mb-3">
-        <span class="input-group-text" id="basic-addon1">Property Name</span>
-        <select class="form-select">
-            @foreach (var item in sessionRoles)
-            {
-            <option value="@item.RoleName">@item.RoleName</option>
-            }
-        </select>
+
+
+    <div class="col-4">
+        <label for="FirstName" class="form-label">First Name</label>
+        <input type="text" class="form-control" id="FirstName">
+    </div>
+    <div class="col-4">
+        <label for="Othernames" class="form-label">Othernames</label>
+        <input type="text" class="form-control" id="Othernames">
+    </div>
+    <div class="col-4">
+        <label for="Surname" class="form-label">Surname</label>
+        <input type="text" class="form-control" id="Surname">
+    </div>
+
+
+
+    <div class="col-12">
+        <label for="inputAddress" class="form-label">Special ID</label>
+        <input type="text" class="form-control" id="inputAddress" placeholder="(Staff/Student Number) Eg: 60215421/20124581">
+    </div>
+
+
+    <br />
+    <br />
+    <h6><b>Extra Properties</b></h6>
+    <button id="add-new-property" class='btn btn-primary' type="button"><i class="bi bi-bookmark-plus"></i> Click to Add </button>
+    <div id="extra-properties-section">
+
+    </div>
+</form>
+
+<div id="extra-property-component" style="display:none">
+    <div class="row" extrapropertycomponentid>
+        <div class="col-6">
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">Property Name</span>
+                <select class="form-select">
+                    @foreach (var item in Model)
+                    {
+                        <option value="@item.ClaimId">@item.ClaimName</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">Value</span>
+                <input type="text" class="form-control" placeholder="Value of Property" required>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <button class="btn btn-danger extra-property-delete" type="button" deletevalue>x</button>
+        </div>
     </div>
 </div>
-<div class="col-6">
-    <div class="input-group mb-3">
-        <span class="input-group-text" id="basic-addon1">Value</span>
-        <input type="text" class="form-control"  placeholder="username/surname/othernames"  aria-label="Username" aria-describedby="basic-addon1">
-    </div>
-</div>
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script>
+    var count = 1;
+    $("#add-new-property").on("click", function () {
+
+        var currentcount = count - 1;
+        var componentclone = $('#extra-property-component').clone();
+        var componentid = 'extraproperty-component-' + currentcount;
+        var componentidvalue = 'id="' + componentid + '"';
+        componentclone = componentclone.show().html();
+        componentclone = componentclone.replace("extrapropertycomponentid", componentidvalue);
+        componentclone = componentclone.replace("propertyname", 'name=ExtraProperties.[' + (currentcount) + '].Id');
+        componentclone = componentclone.replace("propertyvalue", 'name=ExtraProperties[' + (currentcount) + '].Value');
+        var delreplace = "data-id='" + componentid + "'";
+        componentclone = componentclone.replace("deletevalue", delreplace);
+
+        //var htmlstring = "<div class='taskRow'><label>Task" + count + "</label>";
+        //htmlstring += "<input type='text' name='BucketListElement.Progression.BLETasks[" + (count - 1) + "].Text' required='required'>";
+        //htmlstring += "<input type='checkbox' name='BucketListElement.Progression.BLETasks[" + (count - 1) + "].Completed' class='largerCheckbox' value='true'>";
+        //htmlstring += "<button class='btn btn-danger' style='padding-top:1px' onclick='deleteRow(this)' value='" + (count - 1) + "'>-</button></div>"
+
+        $("#extra-properties-section").append(componentclone);
+        count++;
+    });
+
+    $('#extra-properties-section').on('click','.extra-property-delete', function () {
+
+        var componentId = $(this).attr('data-id');
+        console.log(componentId);
+        $("#" + componentId).remove();
+
+        count--;
+    });
+
+</script>

@@ -13,14 +13,24 @@ namespace GroupPanelAssignment.Services
     {
         private IRoleRepository _roleRepository;
         private IAppUserRepository _appUserRepository;
+        private IClaimRepository _claimRepository;
 
         public UserManagementService
             (
             IRoleRepository roleRepository,
-            IAppUserRepository appUserRepository)
+            IAppUserRepository appUserRepository,
+            IClaimRepository claimRepository
+            )
         {
             _roleRepository = roleRepository;
             _appUserRepository = appUserRepository;
+            _claimRepository = claimRepository;
+        }
+
+        public List<Claim> GetAllClaims()
+        {
+            var claims = _claimRepository.GetAllClaims();
+            return claims;
         }
 
         public List<UserViewModel> GetAppUsers(string role)

@@ -19,7 +19,8 @@ namespace GroupPanelAssignment.Data
                 bool containsRole = context.Roles.Any();
                 bool containsScoreItemTypes = context.ScoreItemTypes.Any();
                 bool containsLocations = context.Locations.Any();
-                bool doesNotContainEither = !containsRole || !containsScoreItemTypes || !containsLocations;
+                bool containsClaims = context.Claims.Any();
+                bool doesNotContainAny = !containsRole || !containsScoreItemTypes || !containsLocations || !containsClaims;
 
                 if (!containsRole)
                 {
@@ -36,10 +37,17 @@ namespace GroupPanelAssignment.Data
                     PopulateLocations(context);
                 }
 
-                if (doesNotContainEither)
+                if (!containsClaims)
+                {
+                    PopulateClaims(context);
+                }
+
+                if (doesNotContainAny)
                 {
                     SaveContext(context);
                 }
+
+                
             }
         }
 
@@ -122,6 +130,31 @@ namespace GroupPanelAssignment.Data
                 new Location
                 {
                     LocationName = "Petroleum LT 1",
+                    Created = DateTime.Now,
+                    CreatedBy = "admin"
+                }
+            );
+
+        }
+
+        private static void PopulateClaims(GroPanDbContext context)
+        {
+            context.Claims.AddRange(
+                 new Claim
+                 {
+                     ClaimName = "Programme Name",
+                     Created = DateTime.Now,
+                     CreatedBy = "admin"
+                 },
+                //new Claim
+                //{
+                //    ClaimName = "Programme ID",
+                //    Created = DateTime.Now,
+                //    CreatedBy = "admin"
+                //},
+                new Claim
+                {
+                    ClaimName = "CWA",
                     Created = DateTime.Now,
                     CreatedBy = "admin"
                 }
