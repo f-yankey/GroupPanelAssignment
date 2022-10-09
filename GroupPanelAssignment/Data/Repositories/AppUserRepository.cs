@@ -27,7 +27,15 @@ namespace GroupPanelAssignment.Data.Repositories
                         Othernames = x.Othernames,
                     }
                 ).ToList();
-            return result;
+            //return result;
+
+            List<UserViewModel> list = new List<UserViewModel>();
+
+            for (int i = 0; i < 100; i++)
+            {
+                list.Add(new UserViewModel { FirstName = "Test", Othernames = i.ToString(), Surname ="Justeeing"});
+            }
+            return list;
         }
     }
 }

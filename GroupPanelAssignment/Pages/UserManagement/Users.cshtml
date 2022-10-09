@@ -1,17 +1,70 @@
-﻿@page "/usermanagement/users/{role}"
+﻿@page "/users/{role}"
 @model GroupPanelAssignment.Pages.UserManagement.UsersModel
 @{
     Layout = "~/Pages/Shared/_Layout.cshtml";
-    ViewData["Title"] = Model.Role;
-}
+    ViewData["Title"] = Model.PageTitle;
 
+    var sessionRoles = HttpContext.Session.Get<List<Role>>(ApplicationConstants.RolesInSession);
+}
 
 
 <div class="row">
     <div class="col-md-12">
         <div class="card">
+            <div class="card-header">
+                <ul class="nav nav-pills card-header-pills">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Active</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                    </li>
+                </ul>
+            </div>
             <div class="card-body">
-                <h5 class="card-title"> <b><i>"@CustomStringHelper.Capitalize(CustomStringHelper.ConvertToSpaced(Model.Role))"</i></b> List</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="card-title"> <b><i>"@Model.PageTitle"</i></b> User List</h5>
+                    </div>
+                    <div class="col-md-6 float-right">
+                        <div class="">
+                            <button type="button" class="btn btn-primary"><i class="bi bi-star me-1"></i> With Text</button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <form method="post">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1">Search Text</span>
+                                <input type="text" class="form-control" asp-for="Input.SearchText" placeholder="username/surname/othernames" title="Enter username/surname/othernames" aria-label="Username" aria-describedby="basic-addon1">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1">Filter</span>
+                                <select class="form-select" asp-for="Input.Role">
+                                    <option value="-1" selected="">All</option>
+                                    @foreach (var item in sessionRoles)
+                                    {
+                                        <option value="@item.RoleName">@item.RoleName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="col-sm-10">
+                                <button type="submit" class="btn btn-primary">Apply</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -31,8 +84,27 @@
                         }
                     </tbody>
                 </table>
+
+                @Html.PagedListPager(
+                    (IPagedList)Model.Results,
+                    page => Url.Action("Index", new { PageNumber = page }),
+                    new X.PagedList.Web.Common.PagedListRenderOptions
+                    {
+                        DisplayItemSliceAndTotal = true,
+                        ContainerDivClasses = new[] { "navigation" },
+                        LiElementClasses = new[] { "page-item" },
+                        PageClasses = new[] { "page-link" }
+                    }
+                )
+
             </div>
         </div>
     </div>
 </div>
 
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script>
+    $(document).ready(function () {
+        $('ul.pagination > li.disabled > a').addClass('page-link');
+    });
+</script>
