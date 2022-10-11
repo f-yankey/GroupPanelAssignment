@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using GroupPanelAssignment.Data.Models;
@@ -16,13 +17,18 @@ namespace GroupPanelAssignment.Pages.UserManagement
 
         public UserAddModel Input { get; set; }
 
+       
         public class UserAddModel
         {
-            public List<int> Roles { get; set; }
+            public List<string> Roles { get; set; }
             public string Username { get; set; }
             public string Email { get; set; }
+
+            [Required]
             public string FirstName { get; set; }
             public string Othernames { get; set; }
+
+            [Required]
             public string Surname { get; set; }
             public string SpecialID { get; set; }
             public List<ExtraProperty> ExtraProperties { get; set; }
@@ -40,13 +46,24 @@ namespace GroupPanelAssignment.Pages.UserManagement
         }
         public void OnGet()
         {
-            Claims = _userManagementService.GetAllClaims();
+            SetClaims();
             Input = new UserAddModel();
         }
 
         public IActionResult OnPost(UserAddModel Input)
         {
-            return Page();
+            if (!ModelState.IsValid)
+            {
+                this.Input = Input;
+                SetClaims();
+                return Page();
+            }
+            return RedirectToPage("users");
+        }
+
+        private void SetClaims()
+        {
+            Claims = _userManagementService.GetAllClaims();
         }
     }
 }

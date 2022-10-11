@@ -2,6 +2,10 @@
 @model GroupPanelAssignment.Pages.UserManagement.NewUserModel
 @{
     var sessionRoles = HttpContext.Session.Get<List<Role>>(ApplicationConstants.RolesInSession);
+    var rolesSelectList = new SelectList(sessionRoles, "RoleName", "RoleName");
+    int extraPropertyCount = Model.Input == null ? 0 : Model.Input.ExtraProperties == null ? 0 : Model.Input.ExtraProperties.Count;
+
+
 }
 
 <div class="row">
@@ -12,54 +16,56 @@
                     <h5 class="card-title"> New User </h5>
                 </div>
                 <div class="col-md-6">
-                    
+
                 </div>
             </div>
             <div class="card-body">
                 <div class="row pt-4">
                     <form method="post" id="user-add-form">
-
-                        <div class="col-12">
-                            <div class="input-group mb-3">
-                                <span class="input-group-text"  name="Roles">Role</span>
-                                <select class="form-select" asp-for="Input.Roles" multiple>
-                                    @foreach (var item in sessionRoles)
-                                    {
-                                        <option value="@item.RoleName">@item.RoleName</option>
-                                    }
+                        <div class="row pb-3">
+                            <div class="col-10">
+                                <label asp-for="Input.Roles" class="form-label">Role</label>
+                                <select class="form-select" asp-items="@rolesSelectList" asp-for="Input.Roles" multiple="multiple" id="role-select">
                                 </select>
                             </div>
-                            <p class="" style="font-size:smaller"> <i>Hint: Hold Ctrl + Click to select multiple</i> </p>
                         </div>
+                        @*<div class="col-12">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" name="Roles">Role</span>
+                                    <select class="form-select" asp-items="@rolesSelectList" asp-for="Input.Roles" multiple="multiple" id="role-select">
+                                    </select>
+                                </div>
+                                <p class="" style="font-size:smaller"> <i>Hint: Hold Ctrl + Click to select multiple</i> </p>
+                            </div>*@
 
                         <h6><b>Basic Information</b></h6>
 
 
-                        <div class="row">
+                        <div class="row pb-3">
                             <div class="col-6">
                                 <label for="Username" class="form-label">Username</label>
                                 <input type="text" class="form-control" asp-for="Input.Username">
                             </div>
                             <div class="col-6">
-                                <label for="Email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="Email">
+                                <label asp-for="Input.Email" class="form-label">Email</label>
+                                <input type="email" class="form-control" asp-for="Input.Email">
                             </div>
                         </div>
 
-
-                        <div class="col-4">
-                            <label for="FirstName" class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="FirstName">
+                        <div class="row pb-3">
+                            <div class="col-4">
+                                <label for="FirstName" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="FirstName">
+                            </div>
+                            <div class="col-4">
+                                <label for="Othernames" class="form-label">Othernames</label>
+                                <input type="text" class="form-control" id="Othernames">
+                            </div>
+                            <div class="col-4">
+                                <label for="Surname" class="form-label">Surname</label>
+                                <input type="text" class="form-control" id="Surname">
+                            </div>
                         </div>
-                        <div class="col-4">
-                            <label for="Othernames" class="form-label">Othernames</label>
-                            <input type="text" class="form-control" id="Othernames">
-                        </div>
-                        <div class="col-4">
-                            <label for="Surname" class="form-label">Surname</label>
-                            <input type="text" class="form-control" id="Surname">
-                        </div>
-
 
                         <div class="col-12">
                             <label for="inputAddress" class="form-label">Special ID</label>
@@ -67,13 +73,38 @@
                         </div>
 
 
+
                         <br />
                         <br />
                         <h6><b>Extra Properties</b></h6>
                         <button id="add-new-property" class='btn btn-primary' type="button" style="margin-bottom:10px"><i class="bi bi-bookmark-plus"></i> Click to Add </button>
                         <div id="extra-properties-section">
-
-                        </div>  
+                            @for (int i = 0; i < extraPropertyCount; i++)
+                            {
+                                <div class="row" id="extraproperty-component-@i">
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text">Property Name</span>
+                                            <select class="form-select" name='Input.ExtraProperties[@i].Id' asp-for="@Model.Input.ExtraProperties[i].Id">
+                                                @foreach (var item in Model.Claims)
+                                                {
+                                                    <option value="@item.ClaimId">@item.ClaimName</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-5">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text">Value</span>
+                                            <input type="text" class="form-control" placeholder="Value of Property" asp-for="@Model.Input.ExtraProperties[i].Value" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button class="btn btn-danger extra-property-delete" type="button" deletevalue>x</button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
 
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Save</button>
@@ -92,8 +123,8 @@
     <div class="row" extrapropertycomponentid>
         <div class="col-6">
             <div class="input-group mb-3">
-                <span class="input-group-text" id="basic-addon1">Property Name</span>
-                <select class="form-select">
+                <span class="input-group-text">Property Name</span>
+                <select class="form-select" propertyname="">
                     @foreach (var item in Model.Claims)
                     {
                         <option value="@item.ClaimId">@item.ClaimName</option>
@@ -103,8 +134,8 @@
         </div>
         <div class="col-5">
             <div class="input-group mb-3">
-                <span class="input-group-text" id="basic-addon1">Value</span>
-                <input type="text" class="form-control" placeholder="Value of Property" required>
+                <span class="input-group-text">Value</span>
+                <input type="text" class="form-control" placeholder="Value of Property" propertyvalue="" required>
             </div>
         </div>
         <div class="col-md-1">
@@ -113,9 +144,18 @@
     </div>
 </div>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
+
 <script src="~/lib/jquery/dist/jquery.js"></script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 <script>
-    var count = 1;
+    var extraPropertyCount = @extraPropertyCount;
+    console.log(extraPropertyCount);
+
+    $("#role-select").select2();
+
+    var count = extraPropertyCount + 1;
     $("#add-new-property").on("click", function () {
 
         var currentcount = count - 1;
@@ -123,22 +163,23 @@
         var componentid = 'extraproperty-component-' + currentcount;
         var componentidvalue = 'id="' + componentid + '"';
         componentclone = componentclone.show().html();
+        
         componentclone = componentclone.replace("extrapropertycomponentid", componentidvalue);
-        componentclone = componentclone.replace("propertyname", 'name=ExtraProperties.[' + (currentcount) + '].Id');
-        componentclone = componentclone.replace("propertyvalue", 'name=ExtraProperties[' + (currentcount) + '].Value');
+        //"name='Input.ExtraProperties[" + currentcount + "].Value'";
+        //componentclone = componentclone.replace('propertyname=""', "name='Input.ExtraProperties.[" + (currentcount) + "].Id'");
+        //componentclone = componentclone.replace('propertyvalue=""', "name='Input.ExtraProperties.[" + (currentcount) + "].Value'");
+
+        componentclone = componentclone.replace('propertyname=""', "name='Input.ExtraProperties[" + currentcount + "].Id'");
+        componentclone = componentclone.replace('propertyvalue=""', "name='Input.ExtraProperties[" + currentcount + "].Value'");
+
         var delreplace = "data-id='" + componentid + "'";
         componentclone = componentclone.replace("deletevalue", delreplace);
-
-        //var htmlstring = "<div class='taskRow'><label>Task" + count + "</label>";
-        //htmlstring += "<input type='text' name='BucketListElement.Progression.BLETasks[" + (count - 1) + "].Text' required='required'>";
-        //htmlstring += "<input type='checkbox' name='BucketListElement.Progression.BLETasks[" + (count - 1) + "].Completed' class='largerCheckbox' value='true'>";
-        //htmlstring += "<button class='btn btn-danger' style='padding-top:1px' onclick='deleteRow(this)' value='" + (count - 1) + "'>-</button></div>"
 
         $("#extra-properties-section").append(componentclone);
         count++;
     });
 
-    $('#extra-properties-section').on('click','.extra-property-delete', function () {
+    $('#extra-properties-section').on('click', '.extra-property-delete', function () {
 
         var componentId = $(this).attr('data-id');
         console.log(componentId);
