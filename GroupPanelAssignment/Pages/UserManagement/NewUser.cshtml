@@ -2,7 +2,7 @@
 @model GroupPanelAssignment.Pages.UserManagement.NewUserModel
 @{
     var sessionRoles = HttpContext.Session.Get<List<Role>>(ApplicationConstants.RolesInSession);
-    var rolesSelectList = new SelectList(sessionRoles, "RoleName", "RoleName");
+    var rolesSelectList = new SelectList(sessionRoles, "RoleId", "RoleName");
     int extraPropertyCount = Model.Input == null ? 0 : Model.Input.ExtraProperties == null ? 0 : Model.Input.ExtraProperties.Count;
 
 
@@ -54,22 +54,22 @@
 
                         <div class="row pb-3">
                             <div class="col-4">
-                                <label for="FirstName" class="form-label">First Name</label>
-                                <input type="text" class="form-control" id="FirstName">
+                                <label asp-for="Input.FirstName" class="form-label">First Name</label>
+                                <input type="text" class="form-control" asp-for="Input.FirstName">
                             </div>
                             <div class="col-4">
-                                <label for="Othernames" class="form-label">Othernames</label>
-                                <input type="text" class="form-control" id="Othernames">
+                                <label asp-for="Input.Othernames" class="form-label">Othernames</label>
+                                <input type="text" class="form-control" asp-for="Input.Othernames">
                             </div>
                             <div class="col-4">
-                                <label for="Surname" class="form-label">Surname</label>
-                                <input type="text" class="form-control" id="Surname">
+                                <label asp-for="Input.Surname" class="form-label">Surname</label>
+                                <input type="text" class="form-control" asp-for="Input.Surname">
                             </div>
                         </div>
 
                         <div class="col-12">
-                            <label for="inputAddress" class="form-label">Special ID</label>
-                            <input type="text" class="form-control" id="inputAddress" placeholder="(Staff/Student Number) Eg: 60215421/20124581">
+                            <label asp-for="Input.SpecialID" class="form-label">Special ID</label>
+                            <input type="text" class="form-control" asp-for="Input.SpecialID" placeholder="(Staff/Student Number) Eg: 60215421/20124581">
                         </div>
 
 

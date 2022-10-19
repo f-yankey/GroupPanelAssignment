@@ -34,14 +34,16 @@ namespace GroupPanelAssignment
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-                //.AddRazorPagesOptions(opts =>
-                //{
-                //    opts.Conventions.Add(
-                //    new PageRouteTransformerConvention(
-                //    new KebabCaseParameterTransformer()));
-                //    //opts.Conventions.AddPageRoute(
-                //    //"/Search/Products/StartSearch", "/search-products");
-                //});
+            //.AddRazorPagesOptions(opts =>
+            //{
+            //    opts.Conventions.Add(
+            //    new PageRouteTransformerConvention(
+            //    new KebabCaseParameterTransformer()));
+            //    //opts.Conventions.AddPageRoute(
+            //    //"/Search/Products/StartSearch", "/search-products");
+            //});
+
+            services.AddAutoMapper(typeof(Startup));
 
             services.Configure<RouteOptions>(options =>
             {
@@ -86,6 +88,10 @@ namespace GroupPanelAssignment
             services.AddScoped<IAppUserClaimRepository, AppUserClaimRepository>();
             services.AddScoped<ICwaGroupingRepository, CwaGroupingRepository>();
             services.AddScoped<IClaimRepository, ClaimRepository>();
+            #endregion
+
+            #region Other Injections
+            services.AddScoped<IGropanObjectFactory, GropanObjectFactory>();
             #endregion
 
         }

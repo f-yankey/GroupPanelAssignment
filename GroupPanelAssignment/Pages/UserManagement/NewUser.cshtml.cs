@@ -50,15 +50,27 @@ namespace GroupPanelAssignment.Pages.UserManagement
             Input = new UserAddModel();
         }
 
-        public IActionResult OnPost(UserAddModel Input)
+        public async Task<IActionResult> OnPost(UserAddModel Input)
         {
             if (!ModelState.IsValid)
             {
-                this.Input = Input;
-                SetClaims();
-                return Page();
+                return BackToPage(Input);
             }
+
+            var result = await _userManagementService.AddNewUser(Input);
+
+            if (!result.Key)
+                return BackToPage(Input);
+
             return RedirectToPage("users");
+        }
+
+        private IActionResult BackToPage(UserAddModel Input)
+        {
+            // set error 
+            this.Input = Input;
+            SetClaims();
+            return Page();
         }
 
         private void SetClaims()

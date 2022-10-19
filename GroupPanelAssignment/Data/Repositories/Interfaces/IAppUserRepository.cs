@@ -1,4 +1,6 @@
-﻿using GroupPanelAssignment.Data.ViewModels;
+﻿using GroupPanelAssignment.Data.Models;
+using GroupPanelAssignment.Data.ViewModels;
+using GroupPanelAssignment.Pages.UserManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +10,7 @@ namespace GroupPanelAssignment.Data.Repositories.Interfaces
 {
     public interface IAppUserRepository
     {
+        Task<KeyValuePair<bool,string>> AddAsync(NewUserModel.UserAddModel newUserViewModel);
         List<UserViewModel> GetRoleUsers(string role);
     }
 }

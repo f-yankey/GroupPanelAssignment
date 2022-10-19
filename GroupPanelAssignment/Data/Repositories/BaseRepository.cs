@@ -14,5 +14,9 @@ namespace GroupPanelAssignment.Data.Repositories
         {
             _dbContext = dbContext;
         }
+        public async Task SaveDatabase()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

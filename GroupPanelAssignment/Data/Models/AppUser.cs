@@ -18,10 +18,12 @@ namespace GroupPanelAssignment.Data.Models
         }
 
         public string UserId { get; set; }
+        public string Username { get; set; }
         public string SpecialId { get; set; }
         public string Firstname { get; set; }
         public string Othernames { get; set; }
         public string Surname { get; set; }
+        public string Email { get; set; }
         public DateTime Created { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? Updated { get; set; }
