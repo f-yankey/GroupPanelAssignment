@@ -25,12 +25,18 @@ namespace GroupPanelAssignment.Data.Repositories
             bool isSuccess = false;
             string msg = string.Empty;
 
+            DateTime createdAt = DateTime.Now;
+            string createdBy = "admin";
+
+            var currentSession = _dbContext.AssignmentSessions.FirstOrDefault(x => x.IsCurrent == true);
+
             var transaction = _dbContext.Database.BeginTransaction();
             var newAppUser = _mapper.Map<AppUser>(newUserViewModel);
-            newAppUser.Created = DateTime.Now;
-            newAppUser.CreatedBy = "admin";
+            newAppUser.Created = createdAt;
+            newAppUser.CreatedBy = createdBy;
 
             var validationResponse = ValidateEntry(newAppUser);
+
 
             if (!validationResponse.Key)
                 return validationResponse;
@@ -38,20 +44,45 @@ namespace GroupPanelAssignment.Data.Repositories
             transaction.CreateSavepoint("BeforeNewUser");
 
             //  add user
+          
             await _dbContext.AppUsers.AddAsync(newAppUser);
+            await SaveDatabase();
+
+            //  register user in current session
+            await _dbContext.AppUserAssignmentSessions.AddAsync(new AppUserAssignmentSession { UserId = newAppUser.UserId, AssignmentSessionId = currentSession.AssignmentSessionId, Created = createdAt, CreatedBy = createdBy });
 
             //  add role
-
-            var newUserRole = _mapper.Map<UserRole>(newUserViewModel);
-            await _dbContext.UserRoles.AddAsync(newUserRole);
-
             try
+            {
+                foreach (var item in newUserViewModel.Roles)
+                {
+                    await _dbContext.UserRoles.AddAsync(new UserRole { RoleId = item, UserId = newAppUser.UserId, Created = createdAt, CreatedBy = createdBy });
+                }
+            }
+            catch (Exception ex)
+            {
+
+                msg = ex.Message;
+                transaction.RollbackToSavepoint("BeforeNewUser");
+                return new KeyValuePair<bool, string>(isSuccess, msg);
+            }
+
+            if (newUserViewModel.ExtraProperties != null)
             {
                 foreach (var item in newUserViewModel.ExtraProperties)
                 {
                     var newUserProperty = _mapper.Map<AppUserClaim>(item);
+                    newUserProperty.UserId = newAppUser.UserId;
+                    newUserProperty.Created = createdAt;
+                    newUserProperty.CreatedBy = createdBy;
+                    newUserProperty.AssignmentSessionId = currentSession.AssignmentSessionId;
                     await _dbContext.AppUserClaims.AddAsync(newUserProperty);
                 }
+            }
+
+
+            try
+            {
                 await SaveDatabase();
                 transaction.Commit();
 
@@ -62,6 +93,7 @@ namespace GroupPanelAssignment.Data.Repositories
             {
                 msg = ex.Message;
                 transaction.RollbackToSavepoint("BeforeNewUser");
+                return new KeyValuePair<bool, string>(isSuccess, msg);
             }
            
 
@@ -72,26 +104,18 @@ namespace GroupPanelAssignment.Data.Repositories
 
         public List<UserViewModel> GetRoleUsers(string role)
         {
-            var result = _dbContext.AppUsers
-                .Where(x => x.UserRoles.Any(y => y.Role.RoleName.ToLower() == role.ToLower()))
-                .Select
-                (
-                    x => new UserViewModel
-                    {
-                        UserId = x.UserId,
-                        FirstName = x.Firstname,
-                        Othernames = x.Othernames,
-                    }
-                ).ToList();
-            //return result;
+            List<UserViewModel> users = new List<UserViewModel>();
+            var allUsers = role.ToLower() == "all" ? _dbContext.AppUsers.ToList() : _dbContext.AppUsers.Where(x => x.UserRoles.Any(y => y.Role.RoleName.ToLower() == role.ToLower())).ToList();
+            users = _mapper.Map<List<UserViewModel>>(allUsers);
+            return users;
 
-            List<UserViewModel> list = new List<UserViewModel>();
+            //List<UserViewModel> list = new List<UserViewModel>();
 
-            for (int i = 0; i < 100; i++)
-            {
-                list.Add(new UserViewModel { FirstName = "Test", Othernames = i.ToString(), Surname ="Justeeing"});
-            }
-            return list;
+            //for (int i = 0; i < 100; i++)
+            //{
+            //    list.Add(new UserViewModel { FirstName = "Test", Othernames = i.ToString(), Surname ="Justeeing"});
+            //}
+            //return list;
         }
 
         #region Private Methods
@@ -108,7 +132,7 @@ namespace GroupPanelAssignment.Data.Repositories
                 )
                 .FirstOrDefault();
 
-            if (existingRecord == null)
+            if (existingRecord != null)
                 return new KeyValuePair<bool, string>(false, $"User with similar details exist!");
 
             return new KeyValuePair<bool, string>(true, $"Validation successful!");

@@ -62,7 +62,7 @@ namespace GroupPanelAssignment.Pages.UserManagement
             if (!result.Key)
                 return BackToPage(Input);
 
-            return RedirectToPage("users");
+            return RedirectToPage("~/Pages/UserManagement/Users.cshtml");
         }
 
         private IActionResult BackToPage(UserAddModel Input)

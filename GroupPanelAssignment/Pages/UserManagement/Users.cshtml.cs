@@ -50,6 +50,7 @@ namespace GroupPanelAssignment.Pages.UserManagement
         public IActionResult OnPost(InputModel Input)
         {
             RoleFilter = Input.Role;
+            PageNumber = PageNumber == null ? 1 : PageNumber;
             Results = _userManagementService.GetAppUsers(Input.Role).ToPagedList((int)PageNumber,PageSize);
             SetPageTitle();
             return Page();

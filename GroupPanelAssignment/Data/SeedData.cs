@@ -20,7 +20,8 @@ namespace GroupPanelAssignment.Data
                 bool containsScoreItemTypes = context.ScoreItemTypes.Any();
                 bool containsLocations = context.Locations.Any();
                 bool containsClaims = context.Claims.Any();
-                bool doesNotContainAny = !containsRole || !containsScoreItemTypes || !containsLocations || !containsClaims;
+                bool containsAssignmentSession = context.AssignmentSessions.Any();
+                bool doesNotContainAny = !containsRole || !containsScoreItemTypes || !containsLocations || !containsClaims || !containsAssignmentSession;
 
                 if (!containsRole)
                 {
@@ -42,10 +43,16 @@ namespace GroupPanelAssignment.Data
                     PopulateClaims(context);
                 }
 
+                if (!containsAssignmentSession)
+                {
+                    PopulateAssignmentSession(context);
+                }
+
                 if (doesNotContainAny)
                 {
                     SaveContext(context);
                 }
+
 
                 
             }
@@ -146,18 +153,26 @@ namespace GroupPanelAssignment.Data
                      Created = DateTime.Now,
                      CreatedBy = "admin"
                  },
-                //new Claim
-                //{
-                //    ClaimName = "Programme ID",
-                //    Created = DateTime.Now,
-                //    CreatedBy = "admin"
-                //},
                 new Claim
                 {
                     ClaimName = "CWA",
                     Created = DateTime.Now,
                     CreatedBy = "admin"
                 }
+            );
+
+        }
+
+        private static void PopulateAssignmentSession(GroPanDbContext context)
+        {
+            context.AssignmentSessions.Add(
+                 new AssignmentSession
+                 {
+                     SessionName = "Default Test Session",
+                     IsCurrent = true,
+                     Created = DateTime.Now,
+                     CreatedBy = "admin"
+                 }
             );
 
         }
