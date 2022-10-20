@@ -13,12 +13,11 @@ namespace GroupPanelAssignment.Mappings
     {
         public AppUserProfile()
         {
-            CreateMap<NewUserModel.UserAddModel, AppUser>();
+            CreateMap<UserAddViewModel, AppUser>();
 
-            CreateMap<NewUserModel.ExtraProperty, AppUserClaim>()
+            CreateMap<ExtraProperty, AppUserClaim>()
                 .ForMember(dest => dest.ClaimId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Value));
-
 
             CreateMap<AppUser, UserViewModel>();
         }

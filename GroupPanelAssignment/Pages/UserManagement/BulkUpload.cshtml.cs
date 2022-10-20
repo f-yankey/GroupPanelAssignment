@@ -25,7 +25,7 @@ namespace GroupPanelAssignment.Pages.UserManagement
 
         public async Task<IActionResult> OnPost(IFormFile Input)
         {
-
+            var uploadResult = await _userManagementService.BulkUploadAsync(Input);
             return Page();
         }
     }

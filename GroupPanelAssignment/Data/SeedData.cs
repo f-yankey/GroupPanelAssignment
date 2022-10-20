@@ -1,4 +1,5 @@
 ﻿using GroupPanelAssignment.Data.Models;
+using GroupPanelAssignment.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -149,13 +150,13 @@ namespace GroupPanelAssignment.Data
             context.Claims.AddRange(
                  new Claim
                  {
-                     ClaimName = "Programme Name",
+                     ClaimName = ApplicationConstants.ProgrammeClaim,
                      Created = DateTime.Now,
                      CreatedBy = "admin"
                  },
                 new Claim
                 {
-                    ClaimName = "CWA",
+                    ClaimName = ApplicationConstants.CWAClaim,
                     Created = DateTime.Now,
                     CreatedBy = "admin"
                 }

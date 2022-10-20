@@ -1,11 +1,11 @@
 ﻿using GroupPanelAssignment.Data.Models;
 using GroupPanelAssignment.Data.ViewModels;
 using GroupPanelAssignment.Pages.UserManagement;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static GroupPanelAssignment.Pages.UserManagement.NewUserModel;
 
 namespace GroupPanelAssignment.Services.Interfaces
 {
@@ -13,6 +13,7 @@ namespace GroupPanelAssignment.Services.Interfaces
     {
         List<UserViewModel> GetAppUsers(string role, string searchText = null);
         List<Claim> GetAllClaims();
-        Task<KeyValuePair<bool, string>> AddNewUser(UserAddModel newUserViewModel);
+        Task<KeyValuePair<bool, string>> AddNewUser(UserAddViewModel newUserViewModel);
+        Task<List<UploadViewModel>> BulkUploadAsync(IFormFile file);
     }
 }

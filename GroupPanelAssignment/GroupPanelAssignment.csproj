@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <Folder Include="Data\Models\" />
+    <Folder Include="wwwroot\uploaded-files\" />
   </ItemGroup>
 
 </Project>

@@ -9,5 +9,6 @@ namespace GroupPanelAssignment.Data.Repositories.Interfaces
     public interface IClaimRepository
     {
         List<Claim> GetAllClaims();
+        Claim GetClaimByName(string programmeClaim);
     }
 }

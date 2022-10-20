@@ -20,7 +20,7 @@ namespace GroupPanelAssignment.Data.Repositories
         }
 
        
-        public async Task<KeyValuePair<bool, string>> AddAsync(NewUserModel.UserAddModel newUserViewModel)
+        public async Task<KeyValuePair<bool, string>> AddAsync(UserAddViewModel newUserViewModel)
         {
             bool isSuccess = false;
             string msg = string.Empty;

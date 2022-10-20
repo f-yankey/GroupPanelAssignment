@@ -10,7 +10,7 @@ namespace GroupPanelAssignment.Data.Repositories.Interfaces
 {
     public interface IAppUserRepository
     {
-        Task<KeyValuePair<bool,string>> AddAsync(NewUserModel.UserAddModel newUserViewModel);
+        Task<KeyValuePair<bool,string>> AddAsync(UserAddViewModel newUserViewModel);
         List<UserViewModel> GetRoleUsers(string role);
     }
 }

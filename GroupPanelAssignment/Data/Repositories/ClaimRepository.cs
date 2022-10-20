@@ -18,5 +18,11 @@ namespace GroupPanelAssignment.Data.Repositories
             var result = _dbContext.Claims.ToList();
             return result;
         }
+
+        public Claim GetClaimByName(string claimName)
+        {
+            var result = _dbContext.Claims.Where(x => x.ClaimName == claimName).FirstOrDefault();
+            return result;
+        }
     }
 }
