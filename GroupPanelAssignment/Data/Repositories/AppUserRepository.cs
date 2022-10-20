@@ -100,22 +100,24 @@ namespace GroupPanelAssignment.Data.Repositories
             return new KeyValuePair<bool, string>(isSuccess, msg);
         }
 
-       
+        private List<AppUser> AllUsers()
+        {
+            return _dbContext.AppUsers.ToList();
+        }
+        private List<AppUser> RoleUsers(string role)
+        {
+            return _dbContext.AppUsers
+                .Where(x => x.UserRoles.Any(y => y.Role.RoleName.ToLower() == role.ToLower()))
+                .ToList();
+        }
+
+
 
         public List<UserViewModel> GetRoleUsers(string role)
         {
-            List<UserViewModel> users = new List<UserViewModel>();
-            var allUsers = role.ToLower() == "all" ? _dbContext.AppUsers.ToList() : _dbContext.AppUsers.Where(x => x.UserRoles.Any(y => y.Role.RoleName.ToLower() == role.ToLower())).ToList();
-            users = _mapper.Map<List<UserViewModel>>(allUsers);
+            var allUsers = role.ToLower() == "all" ? AllUsers() : RoleUsers(role);
+            List<UserViewModel> users = _mapper.Map<List<UserViewModel>>(allUsers);
             return users;
-
-            //List<UserViewModel> list = new List<UserViewModel>();
-
-            //for (int i = 0; i < 100; i++)
-            //{
-            //    list.Add(new UserViewModel { FirstName = "Test", Othernames = i.ToString(), Surname ="Justeeing"});
-            //}
-            //return list;
         }
 
         #region Private Methods

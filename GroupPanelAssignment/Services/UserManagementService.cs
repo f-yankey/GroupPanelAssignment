@@ -50,9 +50,26 @@ namespace GroupPanelAssignment.Services
             return claims;
         }
 
-        public List<UserViewModel> GetAppUsers(string role)
+        private List<UserViewModel> FilterUsersBySearchText(List<UserViewModel> users, string searchText)
+        {
+            users = users
+                .Where(
+                x => (x.Surname.Contains(searchText) || x.Surname.ToLower().Trim() == searchText.ToLower().Trim())
+                //|| (x.Othernames.Contains(searchText) || x?.Othernames.ToLower().Trim() == searchText.ToLower().Trim())
+                || (x.FirstName.Contains(searchText) || x.FirstName.ToLower().Trim() == searchText.ToLower().Trim())
+                || (x.Email.Contains(searchText) || x.Email.ToLower().Trim() == searchText.ToLower().Trim())
+                || (x.Username.Contains(searchText) || x.Username.ToLower().Trim() == searchText.ToLower().Trim())
+                ).ToList();
+
+             return users;
+        }
+
+        public List<UserViewModel> GetAppUsers(string role, string searchText = null)
         {
             List<UserViewModel> users = _appUserRepository.GetRoleUsers(role);
+            
+            //  filter users results by search text if search text has a value
+            users = !string.IsNullOrWhiteSpace(searchText) ? FilterUsersBySearchText(users, searchText) : users;
             return users;
         }
 

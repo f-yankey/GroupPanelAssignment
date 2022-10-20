@@ -44,21 +44,33 @@ namespace GroupPanelAssignment.Pages.UserManagement
             RoleFilter = "All";
             PageNumber = PageNumber == null ? 1 : PageNumber;
             Results = _userManagementService.GetAppUsers(RoleFilter).ToPagedList((int)PageNumber, PageSize);
-            SetPageTitle();
+            SetPageTitle(null);
         }
 
         public IActionResult OnPost(InputModel Input)
         {
             RoleFilter = Input.Role;
             PageNumber = PageNumber == null ? 1 : PageNumber;
-            Results = _userManagementService.GetAppUsers(Input.Role).ToPagedList((int)PageNumber,PageSize);
-            SetPageTitle();
+            Results = _userManagementService.GetAppUsers(Input.Role,Input.SearchText).ToPagedList((int)PageNumber,PageSize);
+            SetPageTitle(Input);
             return Page();
         }
 
-        private void SetPageTitle()
+        private void SetPageTitle(InputModel model)
         {
-            PageTitle = CustomStringHelper.Capitalize(CustomStringHelper.ConvertToSpaced(RoleFilter));
+            PageTitle = model == null ? GetRoleFilterText() :
+                string.IsNullOrWhiteSpace(model.SearchText) ? GetRoleFilterText() : 
+                $"{GetSearchText(model)} in {GetRoleFilterText()}";
+        }
+
+        private string GetRoleFilterText()
+        {
+            return CustomStringHelper.Capitalize(CustomStringHelper.ConvertToSpaced(RoleFilter)).Trim();
+        }
+
+        private string GetSearchText(InputModel model)
+        {
+            return model.SearchText.Trim();
         }
     }
 }

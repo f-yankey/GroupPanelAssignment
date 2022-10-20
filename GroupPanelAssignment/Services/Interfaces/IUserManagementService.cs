@@ -11,7 +11,7 @@ namespace GroupPanelAssignment.Services.Interfaces
 {
     public interface IUserManagementService
     {
-        List<UserViewModel> GetAppUsers(string role);
+        List<UserViewModel> GetAppUsers(string role, string searchText = null);
         List<Claim> GetAllClaims();
         Task<KeyValuePair<bool, string>> AddNewUser(UserAddModel newUserViewModel);
     }
