@@ -29,18 +29,8 @@
                                 </select>
                             </div>
                         </div>
-                        @*<div class="col-12">
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text" name="Roles">Role</span>
-                                    <select class="form-select" asp-items="@rolesSelectList" asp-for="Input.Roles" multiple="multiple" id="role-select">
-                                    </select>
-                                </div>
-                                <p class="" style="font-size:smaller"> <i>Hint: Hold Ctrl + Click to select multiple</i> </p>
-                            </div>*@
-
+                       
                         <h6><b>Basic Information</b></h6>
-
-
                         <div class="row pb-3">
                             <div class="col-6">
                                 <label for="Username" class="form-label">Username</label>
@@ -71,8 +61,6 @@
                             <label asp-for="Input.SpecialID" class="form-label">Special ID</label>
                             <input type="text" class="form-control" asp-for="Input.SpecialID" placeholder="(Staff/Student Number) Eg: 60215421/20124581">
                         </div>
-
-
 
                         <br />
                         <br />
@@ -145,9 +133,7 @@
 </div>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
-
 <script src="~/lib/jquery/dist/jquery.js"></script>
-
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 <script>
     var extraPropertyCount = @extraPropertyCount;
@@ -165,10 +151,7 @@
         componentclone = componentclone.show().html();
         
         componentclone = componentclone.replace("extrapropertycomponentid", componentidvalue);
-        //"name='Input.ExtraProperties[" + currentcount + "].Value'";
-        //componentclone = componentclone.replace('propertyname=""', "name='Input.ExtraProperties.[" + (currentcount) + "].Id'");
-        //componentclone = componentclone.replace('propertyvalue=""', "name='Input.ExtraProperties.[" + (currentcount) + "].Value'");
-
+        
         componentclone = componentclone.replace('propertyname=""', "name='Input.ExtraProperties[" + currentcount + "].Id'");
         componentclone = componentclone.replace('propertyvalue=""', "name='Input.ExtraProperties[" + currentcount + "].Value'");
 
@@ -187,5 +170,4 @@
 
         count--;
     });
-
 </script>

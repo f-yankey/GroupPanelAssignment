@@ -17,25 +17,17 @@ namespace GroupPanelAssignment.Services
         private IRoleRepository _roleRepository;
         private IAppUserRepository _appUserRepository;
         private IClaimRepository _claimRepository;
-        private IGropanObjectFactory _gropanObjectFactory;
-        private IAppUserClaimRepository _appUserClaimRepository;
-        private IMapper _mapper;
-
+        
         public UserManagementService
             (
             IRoleRepository roleRepository,
             IAppUserRepository appUserRepository,
-            IClaimRepository claimRepository,
-            IGropanObjectFactory gropanObjectFactory,
-            IAppUserClaimRepository appUserClaimRepository
+            IClaimRepository claimRepository
             )
         {
             _roleRepository = roleRepository;
             _appUserRepository = appUserRepository;
             _claimRepository = claimRepository;
-            _gropanObjectFactory = gropanObjectFactory;
-            _appUserClaimRepository = appUserClaimRepository;
-           
         }
 
         public async Task<KeyValuePair<bool, string>> AddNewUser(NewUserModel.UserAddModel newUserViewModel)
