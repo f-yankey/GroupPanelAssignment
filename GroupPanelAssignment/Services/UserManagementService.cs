@@ -104,31 +104,41 @@ namespace GroupPanelAssignment.Services
                 newUploadViewModel.User = _gropanObjectFactory.CreateNewUserAddViewModel();
                 newUploadViewModel.User.ExtraProperties = _gropanObjectFactory.CreateExtraPropertyList();
 
+                string currentLineUserName = data[0];
+
                 try
                 {
-                    newUploadViewModel.User.Username = data[0];
+                    
+                    newUploadViewModel.User.Username = currentLineUserName;
                     newUploadViewModel.User.SpecialID = data[1];
                     newUploadViewModel.User.FirstName = data[2];
                     newUploadViewModel.User.Othernames = data[3];
                     newUploadViewModel.User.Surname = data[4];
                     newUploadViewModel.User.Email = data[5];
-                    newUploadViewModel.User.Roles = new List<string> { data[6] };
-                    
-                    if (!string.IsNullOrWhiteSpace(data[7]))
-                    {
-                        newUploadViewModel.User.ExtraProperties.Add(new ExtraProperty { Id = programmeProperty.ClaimId, Value = data[7] });
-                    }
+                    newUploadViewModel.User.Roles = new List<string> { _roleRepository.GetByName(data[6]).RoleId };
 
-                    if (!string.IsNullOrWhiteSpace(data[8]))
+                    if (data.Count() > 6)
                     {
-                        newUploadViewModel.User.ExtraProperties.Add(new ExtraProperty { Id = cwaProperty.ClaimId, Value = data[8] });
+                        if (!string.IsNullOrWhiteSpace(data[7]))
+                        {
+                            newUploadViewModel.User.ExtraProperties.Add(new ExtraProperty { Id = programmeProperty.ClaimId, Value = data[7] });
+                        }
                     }
+                    
+                    if (data.Count() > 7)
+                    {
+                        if (!string.IsNullOrWhiteSpace(data[8]))
+                        {
+                            newUploadViewModel.User.ExtraProperties.Add(new ExtraProperty { Id = cwaProperty.ClaimId, Value = data[8] });
+                        }
+                    }
+                    
                     newUploadViewModel.ConversionSucceeded = true;
                 }
                 catch (Exception ex)
                 {
                     newUploadViewModel.ConversionSucceeded = false;
-                    newUploadViewModel.Message = ex.Message;
+                    newUploadViewModel.Message =  $"{currentLineUserName} - {ex.Message}";
                     newUploadViewModel.User = null;
                 }
 
@@ -143,7 +153,7 @@ namespace GroupPanelAssignment.Services
 
             foreach (var item in convertedRecords)
             {
-              var result =  await AddNewUser(item.User);
+                var result =  await AddNewUser(item.User);
                 item.DbSaveSucceeded = result.Key;
                 item.Message = result.Value;
             }

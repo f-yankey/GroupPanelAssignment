@@ -12,5 +12,12 @@ namespace GroupPanelAssignment.Data.Repositories
         public RoleRepository(GroPanDbContext dbContext) : base(dbContext)
         {
         }
+
+        public Role GetByName(string roleName)
+        {
+            return _dbContext.Roles
+                .Where(x => x.RoleName.ToLower().Trim() == roleName.ToLower().Trim())
+                .FirstOrDefault();
+        }
     }
 }

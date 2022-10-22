@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GroupPanelAssignment.Data.ViewModels;
 using GroupPanelAssignment.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,8 @@ namespace GroupPanelAssignment.Pages.UserManagement
 
         public IFormFile Input { get; set; }
 
+        public List<UploadViewModel> UploadResults { get; set; }
+
         public BulkUploadModel(IUserManagementService userManagementService)
         {
             _userManagementService = userManagementService;
@@ -26,6 +29,7 @@ namespace GroupPanelAssignment.Pages.UserManagement
         public async Task<IActionResult> OnPost(IFormFile Input)
         {
             var uploadResult = await _userManagementService.BulkUploadAsync(Input);
+            UploadResults = uploadResult;
             return Page();
         }
     }

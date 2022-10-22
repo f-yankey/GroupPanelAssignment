@@ -1,6 +1,8 @@
 ﻿@page
 @model GroupPanelAssignment.Pages.UserManagement.BulkUploadModel
 @{
+    int resultCount = 1;
+    bool displayTable = Model.UploadResults != null;
 }
 
 <div class="row">
@@ -23,14 +25,58 @@
                                 <input type="file" class="form-control" asp-for="Input">
                             </div>
                         </div>
-                      
-                        
+
+
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Save</button>
                         </div>
 
                     </form>
                 </div>
+
+                @if (displayTable)
+                {
+                    <div class="row">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Message</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.UploadResults)
+                                {
+                                    <tr>
+                                        <th scope="row">@resultCount</th>
+                                        <td>
+                                            @if (item.ConversionSucceeded)
+                                            {
+                                                if (item.DbSaveSucceeded)
+                                                {
+                                                    <span class="text-success">Saved!</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-danger">Couldn't be saved!</span>
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                <span class="text-danger">Couldn't be saved!</span>
+                                            }
+                                        </td>
+                                        <td>@item.Message</td>
+                                    </tr>
+                                    resultCount++;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+
             </div>
         </div>
     </div>
