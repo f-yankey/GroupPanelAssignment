@@ -92,6 +92,7 @@ namespace GroupPanelAssignment
 
             #region Other Injections
             services.AddScoped<IGropanObjectFactory, GropanObjectFactory>();
+            services.AddScoped<ITransactionOperator, TransactionOperator>();
             #endregion
 
         }

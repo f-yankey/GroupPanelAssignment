@@ -3,6 +3,7 @@ using GroupPanelAssignment.Data.Models;
 using GroupPanelAssignment.Data.Repositories.Interfaces;
 using GroupPanelAssignment.Data.ViewModels;
 using GroupPanelAssignment.Pages.UserManagement;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,21 +31,15 @@ namespace GroupPanelAssignment.Data.Repositories
 
             var currentSession = _dbContext.AssignmentSessions.FirstOrDefault(x => x.IsCurrent == true);
 
-            var transaction = _dbContext.Database.BeginTransaction();
             var newAppUser = _mapper.Map<AppUser>(newUserViewModel);
             newAppUser.Created = createdAt;
             newAppUser.CreatedBy = createdBy;
 
             var validationResponse = ValidateEntry(newAppUser);
-
-
             if (!validationResponse.Key)
                 return validationResponse;
 
-            transaction.CreateSavepoint("BeforeNewUser");
-
             //  add user
-          
             await _dbContext.AppUsers.AddAsync(newAppUser);
             await SaveDatabase();
 
@@ -52,21 +47,11 @@ namespace GroupPanelAssignment.Data.Repositories
             await _dbContext.AppUserAssignmentSessions.AddAsync(new AppUserAssignmentSession { UserId = newAppUser.UserId, AssignmentSessionId = currentSession.AssignmentSessionId, Created = createdAt, CreatedBy = createdBy });
 
             //  add role
-            try
+            foreach (var item in newUserViewModel.Roles)
             {
-                foreach (var item in newUserViewModel.Roles)
-                {
-                    await _dbContext.UserRoles.AddAsync(new UserRole { RoleId = item, UserId = newAppUser.UserId, Created = createdAt, CreatedBy = createdBy });
-                }
+                await _dbContext.UserRoles.AddAsync(new UserRole { RoleId = item, UserId = newAppUser.UserId, Created = createdAt, CreatedBy = createdBy });
             }
-            catch (Exception ex)
-            {
-
-                msg = ex.Message;
-                transaction.RollbackToSavepoint("BeforeNewUser");
-                return new KeyValuePair<bool, string>(isSuccess, msg);
-            }
-
+            
             if (newUserViewModel.ExtraProperties != null)
             {
                 foreach (var item in newUserViewModel.ExtraProperties)
@@ -80,22 +65,10 @@ namespace GroupPanelAssignment.Data.Repositories
                 }
             }
 
+            await SaveDatabase();
 
-            try
-            {
-                await SaveDatabase();
-                transaction.Commit();
-
-                msg = "User created successfully!";
-                isSuccess = true;
-            }
-            catch (Exception ex)
-            {
-                msg = ex.Message;
-                transaction.RollbackToSavepoint("BeforeNewUser");
-                return new KeyValuePair<bool, string>(isSuccess, msg);
-            }
-           
+            msg = "User created successfully!";
+            isSuccess = true;
 
             return new KeyValuePair<bool, string>(isSuccess, msg);
         }
@@ -139,6 +112,8 @@ namespace GroupPanelAssignment.Data.Repositories
 
             return new KeyValuePair<bool, string>(true, $"Validation successful!");
         }
+
+       
         #endregion
     }
 }
