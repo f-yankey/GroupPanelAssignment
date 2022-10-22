@@ -43,6 +43,42 @@ namespace GroupPanelAssignment.Services
             _transactionOperator = transactionOperator;
         }
 
+        #region Queries
+        public List<Claim> GetAllClaims()
+        {
+            var claims = _claimRepository.GetAllClaims();
+            return claims;
+        }
+
+        public List<UserViewModel> GetAppUsers(string role, string searchText = null)
+        {
+            List<UserViewModel> users = _appUserRepository.GetRoleUsers(role);
+
+            //  filter users results by search text if search text has a value
+            users = !string.IsNullOrWhiteSpace(searchText) ? FilterUsersBySearchText(users, searchText) : users;
+            return users;
+        }
+        
+        private List<Role> GetRoles()
+        {
+            throw new NotImplementedException();
+        }
+        
+        private List<UserViewModel> FilterUsersBySearchText(List<UserViewModel> users, string searchText)
+        {
+            users = users
+                .Where(
+                x => (x.Surname.Contains(searchText) || x.Surname.ToLower().Trim() == searchText.ToLower().Trim())
+                || (x.FirstName.Contains(searchText) || x.FirstName.ToLower().Trim() == searchText.ToLower().Trim())
+                || (x.Email.Contains(searchText) || x.Email.ToLower().Trim() == searchText.ToLower().Trim())
+                || (x.Username.Contains(searchText) || x.Username.ToLower().Trim() == searchText.ToLower().Trim())
+                ).ToList();
+
+            return users;
+        }
+        #endregion
+
+        #region Commands
         public async Task<KeyValuePair<bool, string>> AddNewUser(UserAddViewModel newUserViewModel)
         {
             string transactionName = ApplicationConstants.BeforeNewUserTransaction;
@@ -61,40 +97,6 @@ namespace GroupPanelAssignment.Services
             }
         }
 
-        public List<Claim> GetAllClaims()
-        {
-            var claims = _claimRepository.GetAllClaims();
-            return claims;
-        }
-
-        private List<UserViewModel> FilterUsersBySearchText(List<UserViewModel> users, string searchText)
-        {
-            users = users
-                .Where(
-                x => (x.Surname.Contains(searchText) || x.Surname.ToLower().Trim() == searchText.ToLower().Trim())
-                //|| (x.Othernames.Contains(searchText) || x?.Othernames.ToLower().Trim() == searchText.ToLower().Trim())
-                || (x.FirstName.Contains(searchText) || x.FirstName.ToLower().Trim() == searchText.ToLower().Trim())
-                || (x.Email.Contains(searchText) || x.Email.ToLower().Trim() == searchText.ToLower().Trim())
-                || (x.Username.Contains(searchText) || x.Username.ToLower().Trim() == searchText.ToLower().Trim())
-                ).ToList();
-
-             return users;
-        }
-
-        public List<UserViewModel> GetAppUsers(string role, string searchText = null)
-        {
-            List<UserViewModel> users = _appUserRepository.GetRoleUsers(role);
-            
-            //  filter users results by search text if search text has a value
-            users = !string.IsNullOrWhiteSpace(searchText) ? FilterUsersBySearchText(users, searchText) : users;
-            return users;
-        }
-
-        private List<Role> GetRoles()
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<List<UploadViewModel>> BulkUploadAsync(IFormFile file)
         {
             //  todo: validate file
@@ -104,8 +106,10 @@ namespace GroupPanelAssignment.Services
             await SaveConvertedRecords(uploadRecords);
             return uploadRecords;
         }
+        #endregion
 
-        #region Private Methods
+
+        #region File Upload Private Methods
         private string SaveFileInTempStorage(IFormFile file)
         {
             string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
@@ -126,6 +130,7 @@ namespace GroupPanelAssignment.Services
 
         private List<UploadViewModel> ConvertCSVToUploadModel(string savePath)
         {
+            //  todo: refactor
             List<UploadViewModel> uploadRecords = _gropanObjectFactory.CreateUploadViewModelList();
             var lines = File.ReadLines(savePath, Encoding.UTF8);
             var programmeProperty = _claimRepository.GetClaimByName(ApplicationConstants.ProgrammeClaim);
