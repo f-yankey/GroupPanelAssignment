@@ -115,7 +115,9 @@ namespace GroupPanelAssignment.Services
                     newUploadViewModel.User.Othernames = data[3];
                     newUploadViewModel.User.Surname = data[4];
                     newUploadViewModel.User.Email = data[5];
-                    newUploadViewModel.User.Roles = new List<string> { _roleRepository.GetByName(data[6]).RoleId };
+                    newUploadViewModel.User.Roles = data[6].ToLower().Trim() == ApplicationConstants.RoleWord.ToLower().Trim() ? 
+                        new List<string> { data[6] } : 
+                        new List<string> { _roleRepository.GetByName(data[6]).RoleId };
 
                     if (data.Count() > 6)
                     {

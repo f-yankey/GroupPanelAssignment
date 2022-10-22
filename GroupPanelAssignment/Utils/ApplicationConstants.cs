@@ -8,6 +8,7 @@ namespace GroupPanelAssignment.Utils
     public static class ApplicationConstants
     {
         public const string RolesInSession = "RolesInSession";
+        public const string RoleWord = "Role";
 
 
         public const string ProgrammeClaim = "Programme Name";
