@@ -1,4 +1,5 @@
 ﻿using GroupPanelAssignment.Data.Models;
+using GroupPanelAssignment.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -19,7 +20,9 @@ namespace GroupPanelAssignment.Data
                 bool containsRole = context.Roles.Any();
                 bool containsScoreItemTypes = context.ScoreItemTypes.Any();
                 bool containsLocations = context.Locations.Any();
-                bool doesNotContainEither = !containsRole || !containsScoreItemTypes || !containsLocations;
+                bool containsClaims = context.Claims.Any();
+                bool containsAssignmentSession = context.AssignmentSessions.Any();
+                bool doesNotContainAny = !containsRole || !containsScoreItemTypes || !containsLocations || !containsClaims || !containsAssignmentSession;
 
                 if (!containsRole)
                 {
@@ -36,10 +39,23 @@ namespace GroupPanelAssignment.Data
                     PopulateLocations(context);
                 }
 
-                if (doesNotContainEither)
+                if (!containsClaims)
+                {
+                    PopulateClaims(context);
+                }
+
+                if (!containsAssignmentSession)
+                {
+                    PopulateAssignmentSession(context);
+                }
+
+                if (doesNotContainAny)
                 {
                     SaveContext(context);
                 }
+
+
+                
             }
         }
 
@@ -72,34 +88,40 @@ namespace GroupPanelAssignment.Data
             context.Roles.AddRange(
                 new Role
                 {
-                    RoleName = "Super Admin",
-                    Created = DateTime.Now,
-                    CreatedBy = "admin"
-                },
-                new Role
-                {
-                    RoleName = "Admin",
-                    Created = DateTime.Now,
-                    CreatedBy = "admin"
-                },
-                new Role
-                {
+                    DisplayOrder = 1,
                     RoleName = "Student",
                     Created = DateTime.Now,
                     CreatedBy = "admin"
                 },
                 new Role
                 {
+                    DisplayOrder = 2,
                     RoleName = "Supervisor",
                     Created = DateTime.Now,
                     CreatedBy = "admin"
                 },
                 new Role
                 {
+                    DisplayOrder = 3,
                     RoleName = "Panel Member",
                     Created = DateTime.Now,
                     CreatedBy = "admin"
+                },
+                new Role
+                {
+                    DisplayOrder = 4,
+                    RoleName = "Admin",
+                    Created = DateTime.Now,
+                    CreatedBy = "admin"
+                },
+                new Role
+                {
+                    DisplayOrder = 5,
+                    RoleName = "Super Admin",
+                    Created = DateTime.Now,
+                    CreatedBy = "admin"
                 }
+                
             );
 
         }
@@ -119,6 +141,39 @@ namespace GroupPanelAssignment.Data
                     Created = DateTime.Now,
                     CreatedBy = "admin"
                 }
+            );
+
+        }
+
+        private static void PopulateClaims(GroPanDbContext context)
+        {
+            context.Claims.AddRange(
+                 new Claim
+                 {
+                     ClaimName = ApplicationConstants.ProgrammeClaim,
+                     Created = DateTime.Now,
+                     CreatedBy = "admin"
+                 },
+                new Claim
+                {
+                    ClaimName = ApplicationConstants.CWAClaim,
+                    Created = DateTime.Now,
+                    CreatedBy = "admin"
+                }
+            );
+
+        }
+
+        private static void PopulateAssignmentSession(GroPanDbContext context)
+        {
+            context.AssignmentSessions.Add(
+                 new AssignmentSession
+                 {
+                     SessionName = "Default Test Session",
+                     IsCurrent = true,
+                     Created = DateTime.Now,
+                     CreatedBy = "admin"
+                 }
             );
 
         }

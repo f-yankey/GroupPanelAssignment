@@ -12,8 +12,9 @@ namespace GroupPanelAssignment.Data.Models
             UserRoles = new HashSet<UserRole>();
         }
 
-        public int RoleId { get; set; }
+        public string RoleId { get; set; }
         public string RoleName { get; set; }
+        public int DisplayOrder { get; set; }
         public DateTime Created { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? Updated { get; set; }

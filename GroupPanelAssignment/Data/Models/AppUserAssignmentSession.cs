@@ -8,7 +8,7 @@ namespace GroupPanelAssignment.Data.Models
     public partial class AppUserAssignmentSession
     {
         public int AppUserAssignmentSessionId { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public int AssignmentSessionId { get; set; }
         public DateTime Created { get; set; }
         public string CreatedBy { get; set; }

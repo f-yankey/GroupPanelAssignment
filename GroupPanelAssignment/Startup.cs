@@ -2,11 +2,14 @@ using GroupPanelAssignment.Data;
 using GroupPanelAssignment.Data.Models;
 using GroupPanelAssignment.Data.Repositories;
 using GroupPanelAssignment.Data.Repositories.Interfaces;
-using GroupPanelAssignment.Data.Services;
-using GroupPanelAssignment.Data.Services.Interfaces;
+using GroupPanelAssignment.Services;
+using GroupPanelAssignment.Services.Interfaces;
+using GroupPanelAssignment.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,10 +34,32 @@ namespace GroupPanelAssignment
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
+            //.AddRazorPagesOptions(opts =>
+            //{
+            //    opts.Conventions.Add(
+            //    new PageRouteTransformerConvention(
+            //    new KebabCaseParameterTransformer()));
+            //    //opts.Conventions.AddPageRoute(
+            //    //"/Search/Products/StartSearch", "/search-products");
+            //});
+
+            services.AddAutoMapper(typeof(Startup));
+
+            services.Configure<RouteOptions>(options =>
+            {
+                options.AppendTrailingSlash = true;
+                options.LowercaseUrls = true;
+                //options.LowercaseQueryStrings = true;
+            });
+
             services.AddDbContext<GroPanDbContext>
             (
                 options => options.UseSqlServer(Configuration.GetConnectionString("default"))
             );
+
+            services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromMinutes(1);//You can set Time   
+            });
 
             #region Service
             services.AddScoped<IUserManagementService, UserManagementService>();
@@ -60,6 +85,14 @@ namespace GroupPanelAssignment
             services.AddScoped<ITeamSplitHistoryRepository, TeamSplitHistoryRepository>();
             services.AddScoped<ITeamSupervisorRepository, TeamSupervisorRepository>();
             services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+            services.AddScoped<IAppUserClaimRepository, AppUserClaimRepository>();
+            services.AddScoped<ICwaGroupingRepository, CwaGroupingRepository>();
+            services.AddScoped<IClaimRepository, ClaimRepository>();
+            #endregion
+
+            #region Other Injections
+            services.AddScoped<IGropanObjectFactory, GropanObjectFactory>();
+            services.AddScoped<ITransactionOperator, TransactionOperator>();
             #endregion
 
         }
@@ -87,11 +120,10 @@ namespace GroupPanelAssignment
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseSession();
             app.UseRouting();
-
             app.UseAuthorization();
-
+            app.UseRolesInitializer();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();

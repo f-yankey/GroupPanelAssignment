@@ -15,7 +15,7 @@ namespace GroupPanelAssignment.Data.Models
 
         public int PanelMemberId { get; set; }
         public int PanelId { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public DateTime Created { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? Updated { get; set; }
