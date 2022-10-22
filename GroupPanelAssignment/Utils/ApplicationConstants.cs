@@ -22,5 +22,9 @@ namespace GroupPanelAssignment.Utils
 
         //  directory contstants
         public const string UploadDirectory = "uploaded-files";
+
+        //  side navigation view texts
+        public const string UserManagement = "Users";
+        public const string TeamManagement = "Groups/Teams";
     }
 }
