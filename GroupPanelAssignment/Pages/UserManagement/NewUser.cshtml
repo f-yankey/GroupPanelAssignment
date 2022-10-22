@@ -151,13 +151,11 @@
         componentclone = componentclone.show().html();
         
         componentclone = componentclone.replace("extrapropertycomponentid", componentidvalue);
-        
         componentclone = componentclone.replace('propertyname=""', "name='Input.ExtraProperties[" + currentcount + "].Id'");
         componentclone = componentclone.replace('propertyvalue=""', "name='Input.ExtraProperties[" + currentcount + "].Value'");
 
         var delreplace = "data-id='" + componentid + "'";
         componentclone = componentclone.replace("deletevalue", delreplace);
-
         $("#extra-properties-section").append(componentclone);
         count++;
     });

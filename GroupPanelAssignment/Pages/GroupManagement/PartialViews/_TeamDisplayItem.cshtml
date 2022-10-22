@@ -1,0 +1,44 @@
+﻿@model TeamViewModel
+
+
+<div class="col-md-4">
+    <div class="card">
+        <div class="card-body">
+            <h6 class="card-title">@Model.TeamName</h6>
+            <span><b><i>Supervisor(s)</i></b></span>
+            <ul>
+                @foreach (var item in Model.Supervisors)
+                {
+                    <li>@item.FullName</li>
+                }
+            </ul>
+            <span><b>Member(s)</b></span>
+            <ol>
+                @foreach (var item in Model.Members)
+                {
+                    <li>@item.FullName</li>
+                }
+            </ol>
+        </div>
+    </div>
+</div>
+
+
+@*<div class="col-md-4">
+    <div class="card">
+        <div class="card-body">
+            <h6 class="card-title">Group Name</h6>
+            <span><b><i>Supervisor(s)</i></b></span>
+            <ul>
+                <li>Kofi Asamoah</li>
+            </ul>
+            <span><b>Member(s)</b></span>
+            <ol>
+                <li>Kofi Asamoah</li>
+                <li>Ama Bintyu</li>
+                <li>Kwaku Okyere</li>
+                <li>Kofi</li>
+            </ol>
+        </div>
+    </div>
+</div>*@
