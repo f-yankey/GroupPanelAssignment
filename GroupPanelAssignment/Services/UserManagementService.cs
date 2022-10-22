@@ -99,7 +99,6 @@ namespace GroupPanelAssignment.Services
 
         public async Task<List<UploadViewModel>> BulkUploadAsync(IFormFile file)
         {
-            //  todo: validate file
             string savePath = SaveFileInTempStorage(file);
             List<UploadViewModel> uploadRecords = ConvertCSVToUploadModel(savePath);
             DeleteFile(savePath);

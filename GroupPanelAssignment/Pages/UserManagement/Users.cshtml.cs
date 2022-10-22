@@ -59,8 +59,8 @@ namespace GroupPanelAssignment.Pages.UserManagement
         private void SetPageTitle(InputModel model)
         {
             PageTitle = model == null ? GetRoleFilterText() :
-                string.IsNullOrWhiteSpace(model.SearchText) ? GetRoleFilterText() : 
-                $"{GetSearchText(model)} in {GetRoleFilterText()}";
+                string.IsNullOrWhiteSpace(model.SearchText) ? 
+                    GetRoleFilterText() : $"{GetSearchText(model)} in {GetRoleFilterText()}";
         }
 
         private string GetRoleFilterText()

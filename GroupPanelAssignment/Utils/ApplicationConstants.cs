@@ -18,6 +18,7 @@ namespace GroupPanelAssignment.Utils
 
         //  word constants
         public const string RoleWord = "Role";
+        public const string CSVExtensionWord = ".csv";
 
         //  directory contstants
         public const string UploadDirectory = "uploaded-files";
