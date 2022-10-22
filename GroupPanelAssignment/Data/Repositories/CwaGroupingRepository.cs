@@ -13,5 +13,15 @@ namespace GroupPanelAssignment.Data.Repositories
         public CwaGroupingRepository(GroPanDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
         }
+
+        public List<CwaGrouping> GetAll()
+        {
+            var currentAssignmentSession = GetCurrentSession();
+            var results = _dbContext.CwaGroupings
+                .Where(x => x.AssignmentSessionId == currentAssignmentSession.AssignmentSessionId)
+                .ToList();
+
+            return results;
+        }
     }
 }

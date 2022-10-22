@@ -13,5 +13,6 @@ namespace GroupPanelAssignment.Data.Repositories.Interfaces
     {
         Task<KeyValuePair<bool,string>> AddAsync(UserAddViewModel newUserViewModel);
         List<UserViewModel> GetRoleUsers(string role);
+        List<UserViewModel> GetUsersByIds(List<string> userIds);
     }
 }

@@ -70,6 +70,15 @@ namespace GroupPanelAssignment.Data.Repositories
             return new KeyValuePair<bool, string>(isSuccess, msg);
         }
 
+        public List<UserViewModel> GetUsersByIds(List<string> userIds)
+        {
+            var users = _dbContext.AppUsers.Where(x => userIds.Contains(x.UserId)).ToList();
+            var results = _mapper.Map<List<UserViewModel>>(users);
+            return results;
+        }
+
+
+
         private List<AppUser> AllUsers()
         {
             return _dbContext.AppUsers.ToList();
@@ -107,8 +116,6 @@ namespace GroupPanelAssignment.Data.Repositories
 
             return new KeyValuePair<bool, string>(true, $"Validation successful!");
         }
-
-       
         #endregion
     }
 }

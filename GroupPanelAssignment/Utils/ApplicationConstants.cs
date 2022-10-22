@@ -26,5 +26,12 @@ namespace GroupPanelAssignment.Utils
         //  side navigation view texts
         public const string UserManagement = "Users";
         public const string TeamManagement = "Groups/Teams";
+
+        //  role constants
+        public const string StudentRole = "Student";
+        public const string SupervisorRole = "Supervisor";
+        public const string PanelMemberRole = "Panel Member";
+        public const string AdminRole = "Admin";
+        public const string SuperAdminRole = "Super Admin";
     }
 }

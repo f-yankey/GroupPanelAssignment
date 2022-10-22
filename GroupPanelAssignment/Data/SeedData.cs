@@ -89,35 +89,35 @@ namespace GroupPanelAssignment.Data
                 new Role
                 {
                     DisplayOrder = 1,
-                    RoleName = "Student",
+                    RoleName = ApplicationConstants.StudentRole,
                     Created = DateTime.Now,
                     CreatedBy = "admin"
                 },
                 new Role
                 {
                     DisplayOrder = 2,
-                    RoleName = "Supervisor",
+                    RoleName = ApplicationConstants.SupervisorRole,
                     Created = DateTime.Now,
                     CreatedBy = "admin"
                 },
                 new Role
                 {
                     DisplayOrder = 3,
-                    RoleName = "Panel Member",
+                    RoleName = ApplicationConstants.PanelMemberRole,
                     Created = DateTime.Now,
                     CreatedBy = "admin"
                 },
                 new Role
                 {
                     DisplayOrder = 4,
-                    RoleName = "Admin",
+                    RoleName = ApplicationConstants.AdminRole,
                     Created = DateTime.Now,
                     CreatedBy = "admin"
                 },
                 new Role
                 {
                     DisplayOrder = 5,
-                    RoleName = "Super Admin",
+                    RoleName = ApplicationConstants.SuperAdminRole,
                     Created = DateTime.Now,
                     CreatedBy = "admin"
                 }

@@ -9,5 +9,6 @@ namespace GroupPanelAssignment.Services.Interfaces
     public interface ITeamManagementService
     {
         List<TeamViewModel> GetTeams();
+        List<TeamViewModel> AutoGroup(TeamAutoCreationViewModel model);
     }
 }

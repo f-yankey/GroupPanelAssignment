@@ -7,6 +7,7 @@ using GroupPanelAssignment.Services.Interfaces;
 using GroupPanelAssignment.Utils;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,6 +25,7 @@ namespace GroupPanelAssignment.Services
         private IClaimRepository _claimRepository;
         private IGropanObjectFactory _gropanObjectFactory;
         private ITransactionOperator _transactionOperator;
+        private IMapper _mapper;
 
         public UserManagementService
             (
@@ -32,7 +34,8 @@ namespace GroupPanelAssignment.Services
             IAppUserRepository appUserRepository,
             IClaimRepository claimRepository,
             IGropanObjectFactory gropanObjectFactory,
-            ITransactionOperator transactionOperator
+            ITransactionOperator transactionOperator,
+            IMapper mapper
             )
         {
             _env = env;
@@ -41,6 +44,7 @@ namespace GroupPanelAssignment.Services
             _claimRepository = claimRepository;
             _gropanObjectFactory = gropanObjectFactory;
             _transactionOperator = transactionOperator;
+            _mapper = mapper;
         }
 
         #region Queries
@@ -58,7 +62,16 @@ namespace GroupPanelAssignment.Services
             users = !string.IsNullOrWhiteSpace(searchText) ? FilterUsersBySearchText(users, searchText) : users;
             return users;
         }
-        
+
+        public SelectList GetUsersSelectList(string role)
+        {
+            var appUsers = GetAppUsers(role);
+            var userSelectList = _mapper.Map<List<SelectListItem>>(appUsers);
+            var selectList = new SelectList(userSelectList, "Value", "Text");
+
+            return selectList;
+        }
+
         private List<Role> GetRoles()
         {
             throw new NotImplementedException();
@@ -200,6 +213,7 @@ namespace GroupPanelAssignment.Services
                 item.Message = $"{item.User.Username} - {result.Value}";
             }
         }
+
         #endregion
     }
 }
