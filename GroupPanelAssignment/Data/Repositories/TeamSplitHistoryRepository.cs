@@ -1,4 +1,5 @@
-﻿using GroupPanelAssignment.Data.Models;
+﻿using AutoMapper;
+using GroupPanelAssignment.Data.Models;
 using GroupPanelAssignment.Data.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace GroupPanelAssignment.Data.Repositories
 {
     public class TeamSplitHistoryRepository : BaseRepository, ITeamSplitHistoryRepository
     {
-        public TeamSplitHistoryRepository(GroPanDbContext dbContext) : base(dbContext)
+        public TeamSplitHistoryRepository(GroPanDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
         }
     }

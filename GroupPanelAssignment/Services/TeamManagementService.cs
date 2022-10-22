@@ -29,7 +29,8 @@ namespace GroupPanelAssignment.Services
 
         public List<TeamViewModel> GetTeams()
         {
-            throw new NotImplementedException();
+            List<TeamViewModel> teams = _teamRepository.GetAll();
+            return teams;
         }
     }
 }

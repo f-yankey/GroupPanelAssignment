@@ -13,14 +13,11 @@ namespace GroupPanelAssignment.Data.Repositories
 {
     public class AppUserRepository : BaseRepository, IAppUserRepository
     {
-        private IMapper _mapper;
-
-        public AppUserRepository(GroPanDbContext dbContext, IMapper mapper) : base(dbContext)
+        
+        public AppUserRepository(GroPanDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
-            _mapper = mapper;
         }
 
-       
         public async Task<KeyValuePair<bool, string>> AddAsync(UserAddViewModel newUserViewModel)
         {
             bool isSuccess = false;
@@ -83,8 +80,6 @@ namespace GroupPanelAssignment.Data.Repositories
                 .Where(x => x.UserRoles.Any(y => y.Role.RoleName.ToLower() == role.ToLower()))
                 .ToList();
         }
-
-
 
         public List<UserViewModel> GetRoleUsers(string role)
         {
