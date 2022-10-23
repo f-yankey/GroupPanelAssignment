@@ -17,7 +17,9 @@ namespace GroupPanelAssignment.Utils
         List<UploadViewModel> CreateUploadViewModelList();
         List<ExtraProperty> CreateExtraPropertyList();
         List<CWAGroupViewModel> CreateCWAGroupViewModelList();
-       CWAGroupViewModel CreateCWAGroupViewModel();
+        CWAGroupViewModel CreateCWAGroupViewModel();
+        TeamViewModel CreateTeamViewModel();
+        List<TeamViewModel> CreateTeamViewModelList();
     }
 
     public class GropanObjectFactory : IGropanObjectFactory
@@ -50,6 +52,16 @@ namespace GroupPanelAssignment.Utils
         public List<UserAddViewModel> CreateNewUserAddViewModelList()
         {
             return new List<UserAddViewModel>();
+        }
+
+        public TeamViewModel CreateTeamViewModel()
+        {
+            return new TeamViewModel();
+        }
+
+        public List<TeamViewModel> CreateTeamViewModelList()
+        {
+            return new List<TeamViewModel>();
         }
 
         public UploadViewModel CreateUploadViewModel()

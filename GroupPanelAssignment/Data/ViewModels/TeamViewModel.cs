@@ -22,6 +22,7 @@ namespace GroupPanelAssignment.Data.ViewModels
 
     public class TeamSupervisorViewModel
     {
+        public string UserId { get; set; }
         public int TeamSupervisorId { get; set; }
         public string FullName { get; set; }
     }

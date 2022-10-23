@@ -12,7 +12,7 @@ namespace GroupPanelAssignment.Utils
         public const string BeforeNewUserTransaction = "BeforeNewUser";
         
 
-        //  name constants
+        //  extra property(claim) name constants
         public const string ProgrammeClaim = "Programme Name";
         public const string CWAClaim = "CWA";
 
