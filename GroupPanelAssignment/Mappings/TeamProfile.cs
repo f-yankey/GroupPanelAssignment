@@ -33,6 +33,8 @@ namespace GroupPanelAssignment.Mappings
 
             CreateMap<StudentForAssignmentViewModel, TeamMemberViewModel>()
              .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+             .ForMember(dest => dest.CWA, opt => opt.MapFrom(src => src.CWA))
+             .ForMember(dest => dest.Programme, opt => opt.MapFrom(src => src.ProgrammeName))
              .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => $"{src.Firstname} {src.Othernames} {src.Surname}"));
         }
     }

@@ -17,6 +17,8 @@ namespace GroupPanelAssignment.Data.ViewModels
     public class TeamMemberViewModel
     {
         public string UserId { get; set; }
+        public string Programme { get; set; }
+        public string CWA { get; set; }
         public int TeamMemberId { get; set; }
         public string FullName { get; set; }
     }

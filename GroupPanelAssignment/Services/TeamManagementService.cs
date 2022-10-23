@@ -39,7 +39,7 @@ namespace GroupPanelAssignment.Services
 
         public List<TeamViewModel> AutoGroup(TeamAutoCreationViewModel model)
         {
-            List<TeamViewModel> results = _gropanObjectFactory.CreateTeamViewModelList();
+            List<TeamViewModel> createdTeams = _gropanObjectFactory.CreateTeamViewModelList();
 
             //  get available users and supervisors
             var availableSupervisors = _appUserRepository
@@ -59,9 +59,7 @@ namespace GroupPanelAssignment.Services
             //  statistics
             int numberOfSupervisors = availableSupervisors.Count;
             int numberOfStudents = availableStudents.Count;
-            int numberOfGroupsToCreate = numberOfStudents / numberOfSupervisors;
-            int numberOfStudentsPerGroup = numberOfStudents / numberOfGroupsToCreate;
-
+            
             //  group students by CWA
             var cwaGroups = _cwaGroupingRepository.GetAll();
             List<CWAGroupViewModel> groupings = _gropanObjectFactory.CreateCWAGroupViewModelList();
@@ -86,52 +84,34 @@ namespace GroupPanelAssignment.Services
             //  grouping ordering 
             groupings = groupings.OrderByDescending(x => x.Max).ToList();
 
-            //  main grouping algorithm
-            for (int i = 0; i < numberOfGroupsToCreate; i++)
+            foreach (var supervisorToAssign in availableSupervisors)
             {
                 //  create new team
                 var newTeam = _gropanObjectFactory.CreateTeamViewModel();
 
                 //  assign supervisor
-                var supervisorToAssign = availableSupervisors.Where(x => !x.IsAssigned).FirstOrDefault();
                 var teamSupervisor = _mapper.Map<TeamSupervisorViewModel>(supervisorToAssign);
                 newTeam.Supervisors.Add(teamSupervisor);
 
-                int groupingIterator = 0;
+                createdTeams.Add(newTeam);
 
-                for (int j = 0; j < numberOfStudentsPerGroup; j++)
-                {
-                    StudentForAssignmentViewModel studentToAssign = null;
-
-                    
-                    //   assign students
-                    while (studentToAssign == null && (groupingIterator < groupings.Count - 1))
-                    {
-                        studentToAssign = groupings[groupingIterator].Students.Where(x => !x.IsAssigned).FirstOrDefault();
-                        groupingIterator++;
-                    }
-
-                    
-                    if (studentToAssign != null)
-                    {
-                        var teamMember = _mapper.Map<TeamMemberViewModel>(studentToAssign);
-                        newTeam.Members.Add(teamMember);
-                        studentToAssign.IsAssigned = true;
-                    }
-
-                    j++;
-                    groupingIterator = j;
-                }
-
-                //  add newyly created team to list of teams
-                results.Add(newTeam);
-
-                //  flagging used supervisor as assigned
                 supervisorToAssign.IsAssigned = true;
-                i++;
             }
 
-            return results;
+            //  main grouping algorithm
+            int teamIterator = 0;          
+            foreach (var group in groupings)
+            {
+                foreach (var studentToAssign in group.Students)
+                {
+                    var teamMember = _mapper.Map<TeamMemberViewModel>(studentToAssign);
+                    createdTeams[teamIterator].Members.Add(teamMember);
+                    studentToAssign.IsAssigned = true;
+                    teamIterator = teamIterator == (createdTeams.Count - 1) ? 0 : teamIterator + 1;
+                }
+            }
+            
+            return createdTeams;
         }
 
         public List<TeamViewModel> GetTeams()
