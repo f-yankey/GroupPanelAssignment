@@ -19,6 +19,7 @@ namespace GroupPanelAssignment.Pages.GroupManagement
         public TeamAutoCreationViewModel Input { get; set; }
         public SelectList StudentSelectList { get; set; }
         public SelectList SupervisorSelectList { get; set; }
+        public List<TeamViewModel> Teams { get; set; }
 
         public AutomaticGroupingModel
             (
@@ -32,14 +33,20 @@ namespace GroupPanelAssignment.Pages.GroupManagement
 
         public void OnGet()
         {
-            StudentSelectList = _userManagementService.GetUsersSelectList(ApplicationConstants.StudentRole);
-            SupervisorSelectList = _userManagementService.GetUsersSelectList(ApplicationConstants.SupervisorRole);
+            InitializePage();
         }
 
         public IActionResult OnPost(TeamAutoCreationViewModel Input)
         {
-            var results = _teamManagementService.AutoGroup(Input);
+            Teams = _teamManagementService.AutoGroup(Input);
+            InitializePage();
             return Page();
+        }
+
+        private void InitializePage()
+        {
+            StudentSelectList = _userManagementService.GetUsersSelectList(ApplicationConstants.StudentRole);
+            SupervisorSelectList = _userManagementService.GetUsersSelectList(ApplicationConstants.SupervisorRole);
         }
     }
 }

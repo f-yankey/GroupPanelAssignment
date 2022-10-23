@@ -9,6 +9,6 @@ namespace GroupPanelAssignment.Data.ViewModels
     {
         public decimal Min { get; set; }
         public decimal Max { get; set; }
-        public List<StudentViewModel> Students { get; set; }
+        public List<StudentForAssignmentViewModel> Students { get; set; }
     }
 }

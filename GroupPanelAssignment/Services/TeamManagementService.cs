@@ -41,20 +41,20 @@ namespace GroupPanelAssignment.Services
         {
             List<TeamViewModel> results = _gropanObjectFactory.CreateTeamViewModelList();
 
-            //  get exempted users
-            List<SupervisorsForAssignmentViewModel> exemptedSupervisors = _appUserRepository.GetUsersByIds<SupervisorsForAssignmentViewModel>(model.ExemptedSupervisors);
-            List<StudentViewModel> exemptedStudents = _appUserRepository.GetUsersByIds<StudentViewModel>(model.ExemptedStudents);
-
-            //  get available users
+            //  get available users and supervisors
             var availableSupervisors = _appUserRepository
                 .GetRoleUsers<SupervisorsForAssignmentViewModel>(ApplicationConstants.SupervisorRole)
-                .Except(exemptedSupervisors)
                 .ToList();
 
+            //  filter out exempted
+            availableSupervisors = model.ExemptedSupervisors == null ? availableSupervisors : availableSupervisors.Where(x => !model.ExemptedSupervisors.Contains(x.UserId)).ToList();
+
             var availableStudents = _appUserRepository
-                .GetRoleUsers<StudentViewModel>(ApplicationConstants.StudentRole)
-                .Except(exemptedStudents)
+                .GetRoleUsers<StudentForAssignmentViewModel>(ApplicationConstants.StudentRole)
                 .ToList();
+
+            //  filter out exempted
+            availableStudents = model.ExemptedStudents == null ? availableStudents : availableStudents.Where(x => !model.ExemptedStudents.Contains(x.UserId)).ToList();
 
             //  statistics
             int numberOfSupervisors = availableSupervisors.Count;
@@ -68,20 +68,26 @@ namespace GroupPanelAssignment.Services
 
             foreach (var group in cwaGroups)
             {
-                var newGrouping = _gropanObjectFactory.CreateCWAGroupViewModel();
-                newGrouping.Min = group.Min;
-                newGrouping.Min = group.Max;
-
                 //  get all students whose CWA falls within the range
-                newGrouping.Students = availableStudents
+                var groupRangeStudents = availableStudents
                     .Where(x => x.CWA >= group.Min && (x.CWA <= group.Max))
                     .ToList();
 
-                groupings.Add(newGrouping);
+                if (groupRangeStudents.Count > 0)
+                {
+                    var newGrouping = _gropanObjectFactory.CreateCWAGroupViewModel();
+                    newGrouping.Min = group.Min;
+                    newGrouping.Max = group.Max;
+                    newGrouping.Students = groupRangeStudents;
+                    groupings.Add(newGrouping);
+                }
             }
 
+            //  grouping ordering 
+            groupings = groupings.OrderByDescending(x => x.Max).ToList();
+
             //  main grouping algorithm
-            for (int i = 1; i < numberOfGroupsToCreate; i++)
+            for (int i = 0; i < numberOfGroupsToCreate; i++)
             {
                 //  create new team
                 var newTeam = _gropanObjectFactory.CreateTeamViewModel();
@@ -91,10 +97,30 @@ namespace GroupPanelAssignment.Services
                 var teamSupervisor = _mapper.Map<TeamSupervisorViewModel>(supervisorToAssign);
                 newTeam.Supervisors.Add(teamSupervisor);
 
+                int groupingIterator = 0;
+
                 for (int j = 0; j < numberOfStudentsPerGroup; j++)
                 {
-                   //   assign students
+                    StudentForAssignmentViewModel studentToAssign = null;
 
+                    
+                    //   assign students
+                    while (studentToAssign == null && (groupingIterator < groupings.Count - 1))
+                    {
+                        studentToAssign = groupings[groupingIterator].Students.Where(x => !x.IsAssigned).FirstOrDefault();
+                        groupingIterator++;
+                    }
+
+                    
+                    if (studentToAssign != null)
+                    {
+                        var teamMember = _mapper.Map<TeamMemberViewModel>(studentToAssign);
+                        newTeam.Members.Add(teamMember);
+                        studentToAssign.IsAssigned = true;
+                    }
+
+                    j++;
+                    groupingIterator = j;
                 }
 
                 //  add newyly created team to list of teams
@@ -102,6 +128,7 @@ namespace GroupPanelAssignment.Services
 
                 //  flagging used supervisor as assigned
                 supervisorToAssign.IsAssigned = true;
+                i++;
             }
 
             return results;

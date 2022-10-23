@@ -22,6 +22,11 @@ namespace GroupPanelAssignment.Data.ViewModels
         public decimal CWA { get; set; }
     }
 
+    public class StudentForAssignmentViewModel : StudentViewModel
+    {
+        public bool IsAssigned { get; set; }
+    }
+
     public class SupervisorsForAssignmentViewModel : UserViewModel
     {
         public bool IsAssigned { get; set; }

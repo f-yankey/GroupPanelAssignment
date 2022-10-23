@@ -31,6 +31,9 @@ namespace GroupPanelAssignment.Mappings
               .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
               .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => $"{src.Firstname} {src.Othernames} {src.Surname}"));
 
+            CreateMap<StudentForAssignmentViewModel, TeamMemberViewModel>()
+             .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+             .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => $"{src.Firstname} {src.Othernames} {src.Surname}"));
         }
     }
 }

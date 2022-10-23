@@ -29,6 +29,13 @@ namespace GroupPanelAssignment.Mappings
                .ForMember(dest => dest.ProgrammeName, opt => opt.MapFrom(src => decimal.Parse(src.AppUserClaims.Where(x => x.Claim.ClaimName == ApplicationConstants.ProgrammeClaim).FirstOrDefault().Value)))
                .ForMember(dest => dest.CWA, opt => opt.MapFrom(src => src.AppUserClaims.Where(x => x.Claim.ClaimName == ApplicationConstants.CWAClaim).FirstOrDefault().Value));
 
+            CreateMap<AppUser, StudentForAssignmentViewModel>()
+               //.ForMember(dest => dest.ProgrammeName, opt => opt.MapFrom(src => decimal.Parse(src.AppUserClaims.Where(x => x.Claim.ClaimName == ApplicationConstants.ProgrammeClaim).FirstOrDefault().Value)))
+               .ForMember(dest => dest.ProgrammeName, opt => opt.MapFrom(src => src.AppUserClaims.Where(x => x.Claim.ClaimName == ApplicationConstants.ProgrammeClaim).FirstOrDefault().Value))
+               .ForMember(dest => dest.CWA, opt => opt.MapFrom(src => src.AppUserClaims.Where(x => x.Claim.ClaimName == ApplicationConstants.CWAClaim).FirstOrDefault().Value));
+
+
+
             CreateMap<UserViewModel, SelectListItem>()
                 .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.UserId))
                 .ForMember(dest => dest.Text, opt => opt.MapFrom(src => $"{src.Firstname} {src.Othernames} {src.Surname} - {src.Username} - {src.Email}"));

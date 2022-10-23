@@ -56,7 +56,7 @@ namespace GroupPanelAssignment.Utils
 
         public TeamViewModel CreateTeamViewModel()
         {
-            return new TeamViewModel();
+            return new TeamViewModel() { Supervisors = new List<TeamSupervisorViewModel>(), Members = new List<TeamMemberViewModel>()};
         }
 
         public List<TeamViewModel> CreateTeamViewModelList()
