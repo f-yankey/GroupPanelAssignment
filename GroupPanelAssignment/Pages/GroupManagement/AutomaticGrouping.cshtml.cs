@@ -36,7 +36,7 @@ namespace GroupPanelAssignment.Pages.GroupManagement
             InitializePage();
         }
 
-        public IActionResult OnPost(TeamAutoCreationViewModel Input)
+        public IActionResult OnPostGroup(TeamAutoCreationViewModel Input)
         {
             Teams = _teamManagementService.AutoGroup(Input);
             HttpContext.Session.Set(ApplicationConstants.TeamsInSession,Teams);
@@ -44,13 +44,13 @@ namespace GroupPanelAssignment.Pages.GroupManagement
             return Page();
         }
 
-        //public IActionResult OnPost()
-        //{
-        //    Teams = HttpContext.Session.Get<List<TeamViewModel>>(ApplicationConstants.TeamsInSession);
-        //    var result = _teamManagementService.SaveGroupingAsync(Teams);
-        //    //InitializePage();
-        //    return RedirectToPage("/");
-        //}
+        public IActionResult OnPostSave()
+        {
+            Teams = HttpContext.Session.Get<List<TeamViewModel>>(ApplicationConstants.TeamsInSession);
+            var result = _teamManagementService.SaveGroupingAsync(Teams);
+            //InitializePage();
+            return RedirectToPage("/");
+        }
 
         private void InitializePage()
         {
