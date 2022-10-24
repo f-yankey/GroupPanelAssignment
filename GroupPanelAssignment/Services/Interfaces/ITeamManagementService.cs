@@ -10,5 +10,6 @@ namespace GroupPanelAssignment.Services.Interfaces
     {
         List<TeamViewModel> GetTeams();
         List<TeamViewModel> AutoGroup(TeamAutoCreationViewModel model);
+        Task<KeyValuePair<bool,string>> SaveGroupingAsync(List<TeamViewModel> teams);
     }
 }

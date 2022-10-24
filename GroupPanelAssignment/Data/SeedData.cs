@@ -223,7 +223,7 @@ namespace GroupPanelAssignment.Data
                 new CwaGrouping
                 {
                     AssignmentSessionId = currentAssignmentSession.AssignmentSessionId,
-                    Min = 1,
+                    Min = 0,
                     Max = (decimal)44.99,
                     Created = DateTime.Now,
                     CreatedBy = "admin"

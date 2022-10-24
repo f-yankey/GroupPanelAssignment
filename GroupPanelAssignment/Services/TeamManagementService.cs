@@ -47,70 +47,73 @@ namespace GroupPanelAssignment.Services
                 .ToList();
 
             //  filter out exempted
-            availableSupervisors = model.ExemptedSupervisors == null ? availableSupervisors : availableSupervisors.Where(x => !model.ExemptedSupervisors.Contains(x.UserId)).ToList();
+            availableSupervisors = model.ExemptedSupervisors == null ? 
+                availableSupervisors : availableSupervisors.Where(x => !model.ExemptedSupervisors.Contains(x.UserId)).ToList();
 
             var availableStudents = _appUserRepository
                 .GetRoleUsers<StudentForAssignmentViewModel>(ApplicationConstants.StudentRole)
                 .ToList();
 
             //  filter out exempted
-            availableStudents = model.ExemptedStudents == null ? availableStudents : availableStudents.Where(x => !model.ExemptedStudents.Contains(x.UserId)).ToList();
+            availableStudents = model.ExemptedStudents == null ? 
+                availableStudents : availableStudents.Where(x => !model.ExemptedStudents.Contains(x.UserId)).ToList();
 
-            //  statistics
-            int numberOfSupervisors = availableSupervisors.Count;
-            int numberOfStudents = availableStudents.Count;
-            
-            //  group students by CWA
-            var cwaGroups = _cwaGroupingRepository.GetAll();
-            List<CWAGroupViewModel> groupings = _gropanObjectFactory.CreateCWAGroupViewModelList();
-
-            foreach (var group in cwaGroups)
+            if (availableSupervisors.Count > 0  && availableStudents.Count > 0)
             {
-                //  get all students whose CWA falls within the range
-                var groupRangeStudents = availableStudents
-                    .Where(x => x.CWA >= group.Min && (x.CWA <= group.Max))
-                    .ToList();
+                //  group students by CWA
+                var cwaGroups = _cwaGroupingRepository.GetAll();
+                List<CWAGroupViewModel> groupings = _gropanObjectFactory.CreateCWAGroupViewModelList();
 
-                if (groupRangeStudents.Count > 0)
+                foreach (var group in cwaGroups)
                 {
-                    var newGrouping = _gropanObjectFactory.CreateCWAGroupViewModel();
-                    newGrouping.Min = group.Min;
-                    newGrouping.Max = group.Max;
-                    newGrouping.Students = groupRangeStudents;
-                    groupings.Add(newGrouping);
+                    //  get all students whose CWA falls within the range
+                    var groupRangeStudents = availableStudents
+                        .Where(x => x.CWA >= group.Min && (x.CWA <= group.Max))
+                        .ToList();
+
+                    if (groupRangeStudents.Count > 0)
+                    {
+                        var newGrouping = _gropanObjectFactory.CreateCWAGroupViewModel();
+                        newGrouping.Min = group.Min;
+                        newGrouping.Max = group.Max;
+                        newGrouping.Students = groupRangeStudents;
+                        groupings.Add(newGrouping);
+                    }
+                }
+
+                //  grouping ordering 
+                groupings = groupings.OrderByDescending(x => x.Max).ToList();
+
+                int count = 1;
+                foreach (var supervisorToAssign in availableSupervisors)
+                {
+                    //  create new team
+                    var newTeam = _gropanObjectFactory.CreateTeamViewModel();
+                    newTeam.TeamName = $"Group {count}";
+
+                    //  assign supervisor
+                    var teamSupervisor = _mapper.Map<TeamSupervisorViewModel>(supervisorToAssign);
+                    newTeam.Supervisors.Add(teamSupervisor);
+                    createdTeams.Add(newTeam);
+                    supervisorToAssign.IsAssigned = true;
+
+                    count++;
+                }
+
+                //  main grouping algorithm
+                int teamIterator = 0;
+                foreach (var group in groupings)
+                {
+                    foreach (var studentToAssign in group.Students)
+                    {
+                        var teamMember = _mapper.Map<TeamMemberViewModel>(studentToAssign);
+                        createdTeams[teamIterator].Members.Add(teamMember);
+                        studentToAssign.IsAssigned = true;
+                        teamIterator = teamIterator == (createdTeams.Count - 1) ? 0 : teamIterator + 1;
+                    }
                 }
             }
 
-            //  grouping ordering 
-            groupings = groupings.OrderByDescending(x => x.Max).ToList();
-
-            foreach (var supervisorToAssign in availableSupervisors)
-            {
-                //  create new team
-                var newTeam = _gropanObjectFactory.CreateTeamViewModel();
-
-                //  assign supervisor
-                var teamSupervisor = _mapper.Map<TeamSupervisorViewModel>(supervisorToAssign);
-                newTeam.Supervisors.Add(teamSupervisor);
-
-                createdTeams.Add(newTeam);
-
-                supervisorToAssign.IsAssigned = true;
-            }
-
-            //  main grouping algorithm
-            int teamIterator = 0;          
-            foreach (var group in groupings)
-            {
-                foreach (var studentToAssign in group.Students)
-                {
-                    var teamMember = _mapper.Map<TeamMemberViewModel>(studentToAssign);
-                    createdTeams[teamIterator].Members.Add(teamMember);
-                    studentToAssign.IsAssigned = true;
-                    teamIterator = teamIterator == (createdTeams.Count - 1) ? 0 : teamIterator + 1;
-                }
-            }
-            
             return createdTeams;
         }
 
@@ -118,6 +121,11 @@ namespace GroupPanelAssignment.Services
         {
             List<TeamViewModel> teams = _teamRepository.GetAll();
             return teams;
+        }
+
+        public async Task<KeyValuePair<bool, string>> SaveGroupingAsync(List<TeamViewModel> teams)
+        {
+            throw new NotImplementedException();
         }
     }
 }

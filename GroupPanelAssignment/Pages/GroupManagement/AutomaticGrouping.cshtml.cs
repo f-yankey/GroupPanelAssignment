@@ -39,9 +39,18 @@ namespace GroupPanelAssignment.Pages.GroupManagement
         public IActionResult OnPost(TeamAutoCreationViewModel Input)
         {
             Teams = _teamManagementService.AutoGroup(Input);
+            HttpContext.Session.Set(ApplicationConstants.TeamsInSession,Teams);
             InitializePage();
             return Page();
         }
+
+        //public IActionResult OnPost()
+        //{
+        //    Teams = HttpContext.Session.Get<List<TeamViewModel>>(ApplicationConstants.TeamsInSession);
+        //    var result = _teamManagementService.SaveGroupingAsync(Teams);
+        //    //InitializePage();
+        //    return RedirectToPage("/");
+        //}
 
         private void InitializePage()
         {

@@ -9,6 +9,9 @@ namespace GroupPanelAssignment.Utils
     {
         //  session constants
         public const string RolesInSession = "RolesInSession";
+        public const string TeamsInSession = "TeamsInSession";
+
+        //  transaction constants
         public const string BeforeNewUserTransaction = "BeforeNewUser";
         
 
