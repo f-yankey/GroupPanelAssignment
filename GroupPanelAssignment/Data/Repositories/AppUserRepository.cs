@@ -39,7 +39,7 @@ namespace GroupPanelAssignment.Data.Repositories
 
             //  add user
             await _dbContext.AppUsers.AddAsync(newAppUser);
-            await SaveDatabase();
+            await SaveDatabaseAsync();
 
             //  register user in current session
             await _dbContext.AppUserAssignmentSessions.AddAsync(new AppUserAssignmentSession { UserId = newAppUser.UserId, AssignmentSessionId = currentSession.AssignmentSessionId, Created = createdAt, CreatedBy = createdBy });
@@ -63,7 +63,7 @@ namespace GroupPanelAssignment.Data.Repositories
                 }
             }
 
-            await SaveDatabase();
+            await SaveDatabaseAsync();
 
             msg = "User created successfully!";
             isSuccess = true;

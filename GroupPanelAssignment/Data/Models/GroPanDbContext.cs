@@ -23,6 +23,12 @@ namespace GroupPanelAssignment.Data.Models
         public virtual DbSet<AssignmentSession> AssignmentSessions { get; set; }
         public virtual DbSet<Claim> Claims { get; set; }
         public virtual DbSet<CwaGrouping> CwaGroupings { get; set; }
+
+        internal object Include()
+        {
+            throw new NotImplementedException();
+        }
+
         public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<Panel> Panels { get; set; }
         public virtual DbSet<PanelMember> PanelMembers { get; set; }

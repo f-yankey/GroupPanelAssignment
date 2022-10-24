@@ -44,12 +44,12 @@ namespace GroupPanelAssignment.Pages.GroupManagement
             return Page();
         }
 
-        public IActionResult OnPostSave()
+        public async Task<IActionResult> OnPostSave()
         {
             Teams = HttpContext.Session.Get<List<TeamViewModel>>(ApplicationConstants.TeamsInSession);
-            var result = _teamManagementService.SaveGroupingAsync(Teams);
+            var result = await _teamManagementService.SaveGroupingAsync(Teams);
             //InitializePage();
-            return RedirectToPage("/");
+            return RedirectToPage(Url.Page("GroupManagement", "Groups"));
         }
 
         private void InitializePage()

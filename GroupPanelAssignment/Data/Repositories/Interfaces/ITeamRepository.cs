@@ -9,5 +9,7 @@ namespace GroupPanelAssignment.Data.Repositories.Interfaces
     public interface ITeamRepository
     {
         List<TeamViewModel> GetAll();
+        Task DeleteAllCurrentSessionGroupsAsync();
+        Task AddTeamAsync(TeamViewModel team);
     }
 }

@@ -125,7 +125,26 @@ namespace GroupPanelAssignment.Services
 
         public async Task<KeyValuePair<bool, string>> SaveGroupingAsync(List<TeamViewModel> teams)
         {
-            throw new NotImplementedException();
+            string transactionName = ApplicationConstants.BeforeNewGroupSaveTransaction;
+            var transaction = _transactionOperator.BeginTransaction(transactionName);
+
+            try
+            {
+                await _teamRepository.DeleteAllCurrentSessionGroupsAsync();
+
+                foreach (var item in teams)
+                {
+                   await _teamRepository.AddTeamAsync(item);
+                }
+                await _transactionOperator.CommitTransactionAsync(transaction);
+                return new KeyValuePair<bool, string>(true, "Groups created successfully!");
+            }
+            catch (Exception ex)
+            {
+               await _transactionOperator.RollbackTransactionAsync(transaction, transactionName);
+               return new KeyValuePair<bool, string>(false, $"An error occured! {ex.Message}");
+            }
+            
         }
     }
 }

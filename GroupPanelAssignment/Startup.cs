@@ -46,7 +46,7 @@ namespace GroupPanelAssignment
             {
                 options.AppendTrailingSlash = true;
                 options.LowercaseUrls = true;
-                //options.LowercaseQueryStrings = true;
+                options.LowercaseQueryStrings = true;
             });
 
             services.AddDbContext<GroPanDbContext>

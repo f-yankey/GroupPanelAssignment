@@ -9,6 +9,7 @@ namespace GroupPanelAssignment.Data.ViewModels
     {
         public int TeamId { get; set; }
         public string TeamName { get; set; }
+        public string TeamTopic { get; set; }
         public List<TeamMemberViewModel> Members { get; set; }
         public List<TeamSupervisorViewModel> Supervisors { get; set; }
 

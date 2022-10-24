@@ -23,7 +23,7 @@ namespace GroupPanelAssignment.Data.Repositories
             return currentSession;
         }
 
-        public async Task SaveDatabase()
+        public async Task SaveDatabaseAsync()
         {
             await _dbContext.SaveChangesAsync();
         }

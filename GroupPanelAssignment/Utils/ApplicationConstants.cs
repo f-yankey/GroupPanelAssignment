@@ -13,6 +13,7 @@ namespace GroupPanelAssignment.Utils
 
         //  transaction constants
         public const string BeforeNewUserTransaction = "BeforeNewUser";
+        public const string BeforeNewGroupSaveTransaction = "BeforeNewGroupSaveTransaction";
         
 
         //  extra property(claim) name constants
