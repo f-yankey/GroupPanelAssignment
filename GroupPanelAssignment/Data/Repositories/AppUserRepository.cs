@@ -3,6 +3,7 @@ using GroupPanelAssignment.Data.Models;
 using GroupPanelAssignment.Data.Repositories.Interfaces;
 using GroupPanelAssignment.Data.ViewModels;
 using GroupPanelAssignment.Pages.UserManagement;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
@@ -13,14 +14,11 @@ namespace GroupPanelAssignment.Data.Repositories
 {
     public class AppUserRepository : BaseRepository, IAppUserRepository
     {
-        private IMapper _mapper;
-
-        public AppUserRepository(GroPanDbContext dbContext, IMapper mapper) : base(dbContext)
+        
+        public AppUserRepository(GroPanDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
-            _mapper = mapper;
         }
 
-       
         public async Task<KeyValuePair<bool, string>> AddAsync(UserAddViewModel newUserViewModel)
         {
             bool isSuccess = false;
@@ -41,7 +39,7 @@ namespace GroupPanelAssignment.Data.Repositories
 
             //  add user
             await _dbContext.AppUsers.AddAsync(newAppUser);
-            await SaveDatabase();
+            await SaveDatabaseAsync();
 
             //  register user in current session
             await _dbContext.AppUserAssignmentSessions.AddAsync(new AppUserAssignmentSession { UserId = newAppUser.UserId, AssignmentSessionId = currentSession.AssignmentSessionId, Created = createdAt, CreatedBy = createdBy });
@@ -65,13 +63,23 @@ namespace GroupPanelAssignment.Data.Repositories
                 }
             }
 
-            await SaveDatabase();
+            await SaveDatabaseAsync();
 
             msg = "User created successfully!";
             isSuccess = true;
 
             return new KeyValuePair<bool, string>(isSuccess, msg);
         }
+
+        
+
+        public List<T> GetUsersByIds<T>(List<string> userIds)
+        {
+            var users = _dbContext.AppUsers.Where(x => userIds.Contains(x.UserId)).ToList();
+            var results = _mapper.Map<List<T>>(users);
+            return results;
+        }
+
 
         private List<AppUser> AllUsers()
         {
@@ -80,18 +88,25 @@ namespace GroupPanelAssignment.Data.Repositories
         private List<AppUser> RoleUsers(string role)
         {
             return _dbContext.AppUsers
+                .Include(x => x.AppUserClaims)
+                .ThenInclude(x => x.Claim)
                 .Where(x => x.UserRoles.Any(y => y.Role.RoleName.ToLower() == role.ToLower()))
                 .ToList();
         }
 
-
-
-        public List<UserViewModel> GetRoleUsers(string role)
+        public List<T> GetRoleUsers<T>(string role)
         {
             var allUsers = role.ToLower() == "all" ? AllUsers() : RoleUsers(role);
-            List<UserViewModel> users = _mapper.Map<List<UserViewModel>>(allUsers);
+            List<T> users = _mapper.Map<List<T>>(allUsers);
             return users;
         }
+
+        //public List<UserViewModel> GetRoleUsers(string role)
+        //{
+        //    var allUsers = role.ToLower() == "all" ? AllUsers() : RoleUsers(role);
+        //    List<UserViewModel> users = _mapper.Map<List<UserViewModel>>(allUsers);
+        //    return users;
+        //}
 
         #region Private Methods
         private KeyValuePair<bool, string> ValidateEntry(AppUser newAppUser)
@@ -112,8 +127,6 @@ namespace GroupPanelAssignment.Data.Repositories
 
             return new KeyValuePair<bool, string>(true, $"Validation successful!");
         }
-
-       
         #endregion
     }
 }

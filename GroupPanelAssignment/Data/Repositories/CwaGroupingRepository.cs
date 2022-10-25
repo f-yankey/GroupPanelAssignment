@@ -1,4 +1,5 @@
-﻿using GroupPanelAssignment.Data.Models;
+﻿using AutoMapper;
+using GroupPanelAssignment.Data.Models;
 using GroupPanelAssignment.Data.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -9,8 +10,18 @@ namespace GroupPanelAssignment.Data.Repositories
 {
     public class CwaGroupingRepository : BaseRepository, ICwaGroupingRepository
     {
-        public CwaGroupingRepository(GroPanDbContext dbContext) : base(dbContext)
+        public CwaGroupingRepository(GroPanDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
+        }
+
+        public List<CwaGrouping> GetAll()
+        {
+            var currentAssignmentSession = GetCurrentSession();
+            var results = _dbContext.CwaGroupings
+                .Where(x => x.AssignmentSessionId == currentAssignmentSession.AssignmentSessionId)
+                .ToList();
+
+            return results;
         }
     }
 }

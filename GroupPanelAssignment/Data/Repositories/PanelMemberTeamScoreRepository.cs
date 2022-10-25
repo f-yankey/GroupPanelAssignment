@@ -1,4 +1,5 @@
-﻿using GroupPanelAssignment.Data.Models;
+﻿using AutoMapper;
+using GroupPanelAssignment.Data.Models;
 using GroupPanelAssignment.Data.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace GroupPanelAssignment.Data.Repositories
 {
     public class PanelMemberTeamScoreRepository : BaseRepository, IPanelMemberTeamScoreRepository
     {
-        public PanelMemberTeamScoreRepository(GroPanDbContext dbContext) : base(dbContext)
+        public PanelMemberTeamScoreRepository(GroPanDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
         }
     }

@@ -22,7 +22,10 @@ namespace GroupPanelAssignment.Data
                 bool containsLocations = context.Locations.Any();
                 bool containsClaims = context.Claims.Any();
                 bool containsAssignmentSession = context.AssignmentSessions.Any();
-                bool doesNotContainAny = !containsRole || !containsScoreItemTypes || !containsLocations || !containsClaims || !containsAssignmentSession;
+                bool containsCWAGroups = context.CwaGroupings.Any();
+                bool doesNotContainAny = !containsRole || !containsScoreItemTypes || 
+                    !containsLocations || !containsClaims || 
+                    !containsAssignmentSession || !containsCWAGroups;
 
                 if (!containsRole)
                 {
@@ -47,14 +50,18 @@ namespace GroupPanelAssignment.Data
                 if (!containsAssignmentSession)
                 {
                     PopulateAssignmentSession(context);
+                    SaveContext(context);
+                }
+
+                if (!containsCWAGroups)
+                {
+                    PopulateCWAGroups(context);
                 }
 
                 if (doesNotContainAny)
                 {
                     SaveContext(context);
                 }
-
-
                 
             }
         }
@@ -89,35 +96,35 @@ namespace GroupPanelAssignment.Data
                 new Role
                 {
                     DisplayOrder = 1,
-                    RoleName = "Student",
+                    RoleName = ApplicationConstants.StudentRole,
                     Created = DateTime.Now,
                     CreatedBy = "admin"
                 },
                 new Role
                 {
                     DisplayOrder = 2,
-                    RoleName = "Supervisor",
+                    RoleName = ApplicationConstants.SupervisorRole,
                     Created = DateTime.Now,
                     CreatedBy = "admin"
                 },
                 new Role
                 {
                     DisplayOrder = 3,
-                    RoleName = "Panel Member",
+                    RoleName = ApplicationConstants.PanelMemberRole,
                     Created = DateTime.Now,
                     CreatedBy = "admin"
                 },
                 new Role
                 {
                     DisplayOrder = 4,
-                    RoleName = "Admin",
+                    RoleName = ApplicationConstants.AdminRole,
                     Created = DateTime.Now,
                     CreatedBy = "admin"
                 },
                 new Role
                 {
                     DisplayOrder = 5,
-                    RoleName = "Super Admin",
+                    RoleName = ApplicationConstants.SuperAdminRole,
                     Created = DateTime.Now,
                     CreatedBy = "admin"
                 }
@@ -161,8 +168,8 @@ namespace GroupPanelAssignment.Data
                     CreatedBy = "admin"
                 }
             );
-
         }
+
 
         private static void PopulateAssignmentSession(GroPanDbContext context)
         {
@@ -175,7 +182,53 @@ namespace GroupPanelAssignment.Data
                      CreatedBy = "admin"
                  }
             );
+        }
 
+        private static void PopulateCWAGroups(GroPanDbContext context)
+        {
+            var currentAssignmentSession = context.AssignmentSessions.Where(x => x.IsCurrent == true).FirstOrDefault();
+            context.CwaGroupings.AddRange(
+                new CwaGrouping
+                {
+                    AssignmentSessionId = currentAssignmentSession.AssignmentSessionId,
+                    Min = 70,
+                    Max = 100,
+                    Created = DateTime.Now,
+                    CreatedBy = "admin"
+                },
+                new CwaGrouping
+                {
+                    AssignmentSessionId = currentAssignmentSession.AssignmentSessionId,
+                    Min = 60,
+                    Max = (decimal)69.99,
+                    Created = DateTime.Now,
+                    CreatedBy = "admin"
+                },
+                new CwaGrouping
+                {
+                    AssignmentSessionId = currentAssignmentSession.AssignmentSessionId,
+                    Min = 50,
+                    Max = (decimal)59.99,
+                    Created = DateTime.Now,
+                    CreatedBy = "admin"
+                },
+                new CwaGrouping
+                {
+                    AssignmentSessionId = currentAssignmentSession.AssignmentSessionId,
+                    Min = 45,
+                    Max = (decimal)49.99,
+                    Created = DateTime.Now,
+                    CreatedBy = "admin"
+                },
+                new CwaGrouping
+                {
+                    AssignmentSessionId = currentAssignmentSession.AssignmentSessionId,
+                    Min = 0,
+                    Max = (decimal)44.99,
+                    Created = DateTime.Now,
+                    CreatedBy = "admin"
+                }
+            );
         }
     }
 }

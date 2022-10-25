@@ -23,6 +23,12 @@ namespace GroupPanelAssignment.Data.Models
         public virtual DbSet<AssignmentSession> AssignmentSessions { get; set; }
         public virtual DbSet<Claim> Claims { get; set; }
         public virtual DbSet<CwaGrouping> CwaGroupings { get; set; }
+
+        internal object Include()
+        {
+            throw new NotImplementedException();
+        }
+
         public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<Panel> Panels { get; set; }
         public virtual DbSet<PanelMember> PanelMembers { get; set; }
@@ -44,8 +50,7 @@ namespace GroupPanelAssignment.Data.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=DESKTOP-004VTUI\\SQLEXPRESS;Database=GroPanDb;Trusted_Connection=True;");
+
             }
         }
 

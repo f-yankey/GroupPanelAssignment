@@ -7,6 +7,7 @@ using GroupPanelAssignment.Services.Interfaces;
 using GroupPanelAssignment.Utils;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,6 +25,7 @@ namespace GroupPanelAssignment.Services
         private IClaimRepository _claimRepository;
         private IGropanObjectFactory _gropanObjectFactory;
         private ITransactionOperator _transactionOperator;
+        private IMapper _mapper;
 
         public UserManagementService
             (
@@ -32,7 +34,8 @@ namespace GroupPanelAssignment.Services
             IAppUserRepository appUserRepository,
             IClaimRepository claimRepository,
             IGropanObjectFactory gropanObjectFactory,
-            ITransactionOperator transactionOperator
+            ITransactionOperator transactionOperator,
+            IMapper mapper
             )
         {
             _env = env;
@@ -41,6 +44,7 @@ namespace GroupPanelAssignment.Services
             _claimRepository = claimRepository;
             _gropanObjectFactory = gropanObjectFactory;
             _transactionOperator = transactionOperator;
+            _mapper = mapper;
         }
 
         #region Queries
@@ -52,26 +56,31 @@ namespace GroupPanelAssignment.Services
 
         public List<UserViewModel> GetAppUsers(string role, string searchText = null)
         {
-            List<UserViewModel> users = _appUserRepository.GetRoleUsers(role);
+            List<UserViewModel> users = _appUserRepository.GetRoleUsers<UserViewModel>(role);
 
             //  filter users results by search text if search text has a value
             users = !string.IsNullOrWhiteSpace(searchText) ? FilterUsersBySearchText(users, searchText) : users;
             return users;
         }
-        
-        private List<Role> GetRoles()
+
+        public SelectList GetUsersSelectList(string role)
         {
-            throw new NotImplementedException();
+            var appUsers = GetAppUsers(role);
+            var userSelectList = _mapper.Map<List<SelectListItem>>(appUsers);
+            var selectList = new SelectList(userSelectList, "Value", "Text");
+
+            return selectList;
         }
         
         private List<UserViewModel> FilterUsersBySearchText(List<UserViewModel> users, string searchText)
         {
             users = users
                 .Where(
-                x => (x.Surname.Contains(searchText) || x.Surname.ToLower().Trim() == searchText.ToLower().Trim())
-                || (x.FirstName.Contains(searchText) || x.FirstName.ToLower().Trim() == searchText.ToLower().Trim())
-                || (x.Email.Contains(searchText) || x.Email.ToLower().Trim() == searchText.ToLower().Trim())
-                || (x.Username.Contains(searchText) || x.Username.ToLower().Trim() == searchText.ToLower().Trim())
+                x => (x.Surname.ToLower().Trim().Contains(searchText.ToLower().Trim()) || x.Surname.ToLower().Trim() == searchText.ToLower().Trim())
+                || (x.Firstname.ToLower().Trim().Contains(searchText.ToLower().Trim()) || x.Firstname.ToLower().Trim() == searchText.ToLower().Trim())
+                || (x.Othernames !=null && (x.Firstname.ToLower().Trim().Contains(searchText.ToLower().Trim()) || x.Firstname.ToLower().Trim() == searchText.ToLower().Trim()))
+                || (x.Email.ToLower().Trim().Contains(searchText.ToLower().Trim()) || x.Email.ToLower().Trim() == searchText.ToLower().Trim())
+                || (x.Username.ToLower().Trim().Contains(searchText.ToLower().Trim()) || x.Username.ToLower().Trim() == searchText.ToLower().Trim())
                 ).ToList();
 
             return users;
@@ -200,6 +209,7 @@ namespace GroupPanelAssignment.Services
                 item.Message = $"{item.User.Username} - {result.Value}";
             }
         }
+
         #endregion
     }
 }

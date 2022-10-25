@@ -3,6 +3,7 @@
 @{
     int resultCount = 1;
     bool displayTable = Model.UploadResults != null;
+    ViewData["Title"] = "Bulk Upload";
 }
 
 <div class="row">
@@ -17,7 +18,7 @@
                 </div>
             </div>
             <div class="card-body">
-                @if(Model.HasErrorMessage)
+                @if (Model.HasErrorMessage)
                 {
                     <div class="row pt-4">
                         <p class="text-danger text-center">@Model.ErrorMessage</p>

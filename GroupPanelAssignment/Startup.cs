@@ -33,23 +33,20 @@ namespace GroupPanelAssignment
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();
-            //.AddRazorPagesOptions(opts =>
-            //{
-            //    opts.Conventions.Add(
-            //    new PageRouteTransformerConvention(
-            //    new KebabCaseParameterTransformer()));
-            //    //opts.Conventions.AddPageRoute(
-            //    //"/Search/Products/StartSearch", "/search-products");
-            //});
-
             services.AddAutoMapper(typeof(Startup));
+
+            services.AddRazorPages()
+            .AddRazorPagesOptions(opts =>
+            {
+                opts.Conventions.Add(new PageRouteTransformerConvention(new KebabCaseParameterTransformer()));
+            });
+
 
             services.Configure<RouteOptions>(options =>
             {
                 options.AppendTrailingSlash = true;
                 options.LowercaseUrls = true;
-                //options.LowercaseQueryStrings = true;
+                options.LowercaseQueryStrings = true;
             });
 
             services.AddDbContext<GroPanDbContext>

@@ -1,4 +1,93 @@
-﻿@page
+﻿@page ""
 @model GroupPanelAssignment.Pages.GroupManagement.GroupsModel
 @{
+    ViewData["Title"] = "Groups";
 }
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="col-md-12">
+                    <h5 class="card-title">
+                        @if (!string.IsNullOrWhiteSpace(Model.PageTitle))
+                        {
+                            <b><i>"@Model.PageTitle"</i></b>
+                        }
+                        Groups / Teams(@Model.Teams.Count)
+                    </h5>
+                </div>
+                <div class="col-md-12">
+                    <div class="float-right">
+                        <a class="btn btn-outline-primary" asp-page="/groupmanagement/newgroup"><i class="bi bi-bookshelf me-1"></i> Create Group </a>
+                        <a class="btn btn-outline-primary" asp-page="/groupmanagement/automaticgrouping"><i class="bi bi-shuffle me-1"></i> Automatic Grouping</a>
+                        @if (Model.Teams.Count > 0)
+                        {
+                            <a class="btn btn-outline-primary" asp-page-handler="Download"><i class="bi bi-download me-1"></i> Download CSV</a>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row pt-4">
+                    <form method="post">
+                        <div class="row mb-3">
+                            <div class="col-md-10">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="basic-addon1">Search Text</span>
+                                    <input type="text" class="form-control" asp-for="Input.SearchText" placeholder="team name/supervisor name/member name" title="Enter team name/supervisor name/member name" aria-label="" aria-describedby="basic-addon1">
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="col-sm-10">
+                                    <button type="submit" class="btn btn-primary">Apply</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="row pt-4">
+                    @foreach (var item in Model.Teams)
+                    {
+                        @await Html.PartialAsync("~/Pages/GroupManagement/PartialViews/_TeamDisplayItem.cshtml", item)
+                    }
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <p class="text-center p-5">
+                                        <a class="btn" asp-page="/groupmanagement/newgroup">
+                                            <i class="bi bi-plus link-dark" style="font-size:100px"></i>
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @Html.PagedListPager(
+                    (IPagedList)Model.Teams,
+                    page => Url.Action("Index", new { PageNumber = page }),
+                    new X.PagedList.Web.Common.PagedListRenderOptions
+                    {
+                        DisplayItemSliceAndTotal = true,
+                        ContainerDivClasses = new[] { "navigation text-center" },
+                        LiElementClasses = new[] { "page-item" },
+                        PageClasses = new[] { "page-link" }
+                    }
+                )
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script>
+    $(document).ready(function () {
+        $('ul.pagination > li.disabled > a').addClass('page-link');
+    });
+</script>
