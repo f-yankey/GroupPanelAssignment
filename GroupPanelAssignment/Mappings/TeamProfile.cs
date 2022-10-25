@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GroupPanelAssignment.Data.Models;
 using GroupPanelAssignment.Data.ViewModels;
+using GroupPanelAssignment.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,8 @@ namespace GroupPanelAssignment.Mappings
             CreateMap<TeamMember, TeamMemberViewModel>()
               .ForMember(dest => dest.TeamMemberId, opt => opt.MapFrom(src => src.TeamMemberId))
               .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+              .ForMember(dest => dest.ProgrammeName, opt => opt.MapFrom(src => src.User.AppUserClaims.Where(x => x.Claim.ClaimName == ApplicationConstants.ProgrammeClaim).FirstOrDefault().Value))
+              .ForMember(dest => dest.CWA, opt => opt.MapFrom(src => src.User.AppUserClaims.Where(x => x.Claim.ClaimName == ApplicationConstants.CWAClaim).FirstOrDefault().Value))
               .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => $"{src.User.Firstname} {src.User.Othernames} {src.User.Surname}"));
 
             CreateMap<TeamMemberViewModel, TeamMember>()
@@ -48,7 +51,7 @@ namespace GroupPanelAssignment.Mappings
             CreateMap<StudentForAssignmentViewModel, TeamMemberViewModel>()
              .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
              .ForMember(dest => dest.CWA, opt => opt.MapFrom(src => src.CWA))
-             .ForMember(dest => dest.Programme, opt => opt.MapFrom(src => src.ProgrammeName))
+             .ForMember(dest => dest.ProgrammeName, opt => opt.MapFrom(src => src.ProgrammeName))
              .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => $"{src.Firstname} {src.Othernames} {src.Surname}"));
 
 

@@ -49,7 +49,7 @@ namespace GroupPanelAssignment.Pages.GroupManagement
             Teams = HttpContext.Session.Get<List<TeamViewModel>>(ApplicationConstants.TeamsInSession);
             var result = await _teamManagementService.SaveGroupingAsync(Teams);
             //InitializePage();
-            return RedirectToPage(Url.Page("GroupManagement", "Groups"));
+            return RedirectToPage("Groups");
         }
 
         private void InitializePage()

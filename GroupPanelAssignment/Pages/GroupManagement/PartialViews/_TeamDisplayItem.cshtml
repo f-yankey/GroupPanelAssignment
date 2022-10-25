@@ -21,7 +21,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.Members)
+                    @foreach (var item in Model.Members.OrderByDescending(x => x.CWA))
                     {
                         <tr>
                             <td>@item.FullName</td>

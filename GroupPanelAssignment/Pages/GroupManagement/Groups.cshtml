@@ -8,7 +8,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <h5 class="card-title">
                         @if (!string.IsNullOrWhiteSpace(Model.PageTitle))
                         {
@@ -17,10 +17,14 @@
                         Groups / Teams(@Model.Teams.Count)
                     </h5>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <div class="float-right">
                         <a class="btn btn-outline-primary" asp-page="/groupmanagement/newgroup"><i class="bi bi-bookshelf me-1"></i> Create Group </a>
                         <a class="btn btn-outline-primary" asp-page="/groupmanagement/automaticgrouping"><i class="bi bi-shuffle me-1"></i> Automatic Grouping</a>
+                        @if (Model.Teams.Count > 0)
+                        {
+                            <a class="btn btn-outline-primary" asp-page="/groupmanagement/automaticgrouping"><i class="bi bi-download me-1"></i> Download CSV</a>
+                        }
                     </div>
                 </div>
             </div>

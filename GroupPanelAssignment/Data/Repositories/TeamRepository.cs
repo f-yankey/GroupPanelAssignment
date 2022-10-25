@@ -82,7 +82,7 @@ namespace GroupPanelAssignment.Data.Repositories
         {
             var currentAssignmentSession = GetCurrentSession();
             var teams = _dbContext.Teams
-                .Include(x => x.TeamMembers).ThenInclude(x =>x.User)
+                .Include(x => x.TeamMembers).ThenInclude(x =>x.User).ThenInclude(x => x.AppUserClaims).ThenInclude(x => x.Claim)
                 .Include(x => x.TeamSupervisors).ThenInclude(x => x.User)
                 .Where(x => x.AssignmentSessionId == currentAssignmentSession.AssignmentSessionId)
                 .ToList();
