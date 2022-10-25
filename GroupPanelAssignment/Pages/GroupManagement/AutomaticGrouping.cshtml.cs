@@ -48,7 +48,6 @@ namespace GroupPanelAssignment.Pages.GroupManagement
         {
             Teams = HttpContext.Session.Get<List<TeamViewModel>>(ApplicationConstants.TeamsInSession);
             var result = await _teamManagementService.SaveGroupingAsync(Teams);
-            //InitializePage();
             return RedirectToPage("Groups");
         }
 

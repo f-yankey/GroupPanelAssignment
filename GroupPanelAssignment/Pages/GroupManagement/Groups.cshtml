@@ -1,6 +1,7 @@
 ﻿@page ""
 @model GroupPanelAssignment.Pages.GroupManagement.GroupsModel
 @{
+    ViewData["Title"] = "Groups";
 }
 
 
@@ -23,7 +24,7 @@
                         <a class="btn btn-outline-primary" asp-page="/groupmanagement/automaticgrouping"><i class="bi bi-shuffle me-1"></i> Automatic Grouping</a>
                         @if (Model.Teams.Count > 0)
                         {
-                            <a class="btn btn-outline-primary" asp-page="/groupmanagement/automaticgrouping"><i class="bi bi-download me-1"></i> Download CSV</a>
+                            <a class="btn btn-outline-primary" asp-page-handler="Download"><i class="bi bi-download me-1"></i> Download CSV</a>
                         }
                     </div>
                 </div>

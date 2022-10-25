@@ -37,5 +37,8 @@ namespace GroupPanelAssignment.Utils
         public const string PanelMemberRole = "Panel Member";
         public const string AdminRole = "Admin";
         public const string SuperAdminRole = "Super Admin";
+
+        //  content types
+        public const string CSVContentType = "application/CSV";
     }
 }

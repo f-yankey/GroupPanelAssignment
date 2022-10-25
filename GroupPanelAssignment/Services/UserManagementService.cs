@@ -71,20 +71,16 @@ namespace GroupPanelAssignment.Services
 
             return selectList;
         }
-
-        private List<Role> GetRoles()
-        {
-            throw new NotImplementedException();
-        }
         
         private List<UserViewModel> FilterUsersBySearchText(List<UserViewModel> users, string searchText)
         {
             users = users
                 .Where(
-                x => (x.Surname.Contains(searchText) || x.Surname.ToLower().Trim() == searchText.ToLower().Trim())
-                || (x.Firstname.Contains(searchText) || x.Firstname.ToLower().Trim() == searchText.ToLower().Trim())
-                || (x.Email.Contains(searchText) || x.Email.ToLower().Trim() == searchText.ToLower().Trim())
-                || (x.Username.Contains(searchText) || x.Username.ToLower().Trim() == searchText.ToLower().Trim())
+                x => (x.Surname.ToLower().Trim().Contains(searchText.ToLower().Trim()) || x.Surname.ToLower().Trim() == searchText.ToLower().Trim())
+                || (x.Firstname.ToLower().Trim().Contains(searchText.ToLower().Trim()) || x.Firstname.ToLower().Trim() == searchText.ToLower().Trim())
+                || (x.Othernames !=null && (x.Firstname.ToLower().Trim().Contains(searchText.ToLower().Trim()) || x.Firstname.ToLower().Trim() == searchText.ToLower().Trim()))
+                || (x.Email.ToLower().Trim().Contains(searchText.ToLower().Trim()) || x.Email.ToLower().Trim() == searchText.ToLower().Trim())
+                || (x.Username.ToLower().Trim().Contains(searchText.ToLower().Trim()) || x.Username.ToLower().Trim() == searchText.ToLower().Trim())
                 ).ToList();
 
             return users;

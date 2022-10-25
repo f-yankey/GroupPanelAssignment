@@ -8,7 +8,8 @@ namespace GroupPanelAssignment.Services.Interfaces
 {
     public interface ITeamManagementService
     {
-        List<TeamViewModel> GetTeams();
+        List<TeamViewModel> GetTeams(string filter=null);
+        byte[] GetGroupingCSV();
         List<TeamViewModel> AutoGroup(TeamAutoCreationViewModel model);
         Task<KeyValuePair<bool,string>> SaveGroupingAsync(List<TeamViewModel> teams);
     }

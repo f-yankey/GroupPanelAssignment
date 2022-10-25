@@ -3,8 +3,10 @@ using GroupPanelAssignment.Data.Repositories.Interfaces;
 using GroupPanelAssignment.Data.ViewModels;
 using GroupPanelAssignment.Services.Interfaces;
 using GroupPanelAssignment.Utils;
+using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,6 +14,7 @@ namespace GroupPanelAssignment.Services
 {
     public class TeamManagementService : ITeamManagementService
     {
+        private IWebHostEnvironment _env;
         private IGropanObjectFactory _gropanObjectFactory;
         private ITransactionOperator _transactionOperator;
         private ITeamRepository _teamRepository;
@@ -26,7 +29,8 @@ namespace GroupPanelAssignment.Services
             ITeamRepository teamRepository,
             IAppUserRepository appUserRepository,
             ICwaGroupingRepository cwaGroupingRepository,
-            IMapper mapper
+            IMapper mapper,
+            IWebHostEnvironment env
             )
         {
             _gropanObjectFactory = gropanObjectFactory;
@@ -35,6 +39,7 @@ namespace GroupPanelAssignment.Services
             _appUserRepository = appUserRepository;
             _cwaGroupingRepository = cwaGroupingRepository;
             _mapper = mapper;
+            _env = env;
         }
 
         public List<TeamViewModel> AutoGroup(TeamAutoCreationViewModel model)
@@ -117,9 +122,30 @@ namespace GroupPanelAssignment.Services
             return createdTeams;
         }
 
-        public List<TeamViewModel> GetTeams()
+        public List<TeamViewModel> GetTeams(string filter=null)
         {
             List<TeamViewModel> teams = _teamRepository.GetAll();
+            
+            if (string.IsNullOrWhiteSpace(filter))
+                return teams;
+
+            teams = GetFilteredTeams(teams,filter);
+
+            return teams;
+        }
+
+        private List<TeamViewModel> GetFilteredTeams(List<TeamViewModel> teams, string filter)
+        {
+            teams = teams
+                .Where(
+                x => ( x.TeamName.ToLower().Trim().Contains(filter.ToLower().Trim()) || x.TeamName.ToLower().Trim() == filter.ToLower().Trim() )
+                || (x.Members.Any(y => y.FullName.ToLower().Trim().Contains(filter.ToLower().Trim()) || y.FullName.ToLower().Trim() == filter.ToLower().Trim()))
+                || (x.Members.Any(y => y.ProgrammeName.ToLower().Trim().Contains(filter.ToLower().Trim()) || y.ProgrammeName.ToLower().Trim() == filter.ToLower().Trim()))
+                || (x.Members.Any(y => y.CWA != null && (y.CWA.Contains(filter.ToLower().Trim()) || y.CWA == filter.ToLower().Trim())))
+                || (x.Supervisors.Any(y => y.FullName.ToLower().Trim().Contains(filter.ToLower().Trim()) || y.FullName.ToLower().Trim() == filter.ToLower().Trim()))
+                || (x.TeamTopic != null && (x.TeamTopic.ToLower().Trim().Contains(filter.ToLower().Trim()) || x.TeamTopic.ToLower().Trim() == filter.ToLower().Trim()))
+            )
+                .ToList();
             return teams;
         }
 
@@ -145,6 +171,41 @@ namespace GroupPanelAssignment.Services
                return new KeyValuePair<bool, string>(false, $"An error occured! {ex.Message}");
             }
             
+        }
+
+        public byte[] GetGroupingCSV()
+        {
+            var allCurrentGrouping = GetTeams();
+
+            string fileName = $"{Guid.NewGuid()}.csv";
+            string savePath = Path.Combine(Directory.GetCurrentDirectory(), $"{_env.WebRootPath}/{ApplicationConstants.UploadDirectory}", fileName);
+
+            string lines = string.Empty;
+
+            foreach (var item in allCurrentGrouping)
+            {
+                lines = $"{lines} {item.TeamName} - Supervisor(s): ";
+              
+                foreach (var supervisor in item.Supervisors)
+                {
+                    lines = $"{lines}  {item.Supervisors.FirstOrDefault().FullName}/";
+                }
+                lines = $"{lines}\n";
+
+                foreach (var member in item.Members.OrderByDescending(x => x.CWA))
+                {
+                    lines = $"{lines} {member.FullName}, {member.CWA} \n";
+                }
+                lines = $"{lines}\n \n";
+            }
+
+            File.WriteAllText(savePath, lines);
+
+            var bytes = File.ReadAllBytes(savePath);
+
+            File.Delete(savePath);
+
+            return bytes;
         }
     }
 }
